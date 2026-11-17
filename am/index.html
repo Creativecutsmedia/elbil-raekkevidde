@@ -244,6 +244,43 @@ h2{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-
 .ansvar h3{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-spacing:0;color:#fff}
 .besked{background:var(--navy);border:0;border-radius:4px;backdrop-filter:none}
 
+/* Præcis som am.dk (brorens ønske 17/11): kolonnerne som am.dk's hvide nyhedskort med mørkeblå tekst,
+   "A&M" som logo på mobil, tynd grå brødtekst, gul accent. Tokens omdefineres inde i kortene. */
+.gitter>section{background:#ffffff;border-radius:10px;padding:28px 24px;
+  --tekst:#202a45; --daempet:#596d78; --linje:#e3e6ea; --felt:#f2f2f2; color:#202a45}
+.gitter>section h2{color:#202a45;font-weight:600;font-size:19px}
+.gitter>section .lille{color:#202a45}
+.gitter>section .lille small,.gitter>section .forklar{color:#596d78;font-weight:400}
+.gitter>section .forklar{background:#f2f2f2}
+.gitter>section .info{border-color:#202a45;color:#202a45}
+.gitter>section .chip{background:#f2f2f2;color:#202a45}
+.gitter>section .chip[aria-pressed="true"]{background:var(--gul);color:#202a45}
+.gitter>section .radio input{border-color:#202a45}
+.gitter>section .blanding{background:#f2f2f2}
+.gitter>section .seg{border-right-color:#dfe3e6}
+.gitter>section .procenter b{color:#ce9209}
+.gitter>section .procenter .lille{color:#596d78}
+.gitter>section .temp .vaerdi,.gitter>section .temp .ender{color:#202a45}
+.gitter>section .temp input{background:var(--gul)!important}
+.gitter>section .skift span.spor{border-color:#202a45}
+.gitter>section .skift input:not(:checked)+span.spor::after{background:#868e96}
+.gitter>section .resultat{background:#202a45;color:#fff}
+.gitter>section .resultat .km{color:#fff}
+.gitter>section .resultat .forskel{color:#c9ccd1}
+.foto{border-radius:10px}
+.intro{font-weight:400}.forbrug{font-weight:300}
+.ansvar p{font-weight:300}
+/* Knapperne som am.dk: Del er den gule hovedknap (som SØG), Gem har hvid kant (som Book tid) */
+#del{background:var(--gul);border-color:var(--gul);color:#202a45}
+#del:hover{background:#ffc23d}
+/* Logo: fuldt navn på pc, "A&M" på mobil som am.dk */
+.logo-am{font-weight:500}
+@media (max-width:600px){
+  .logo-am{font-size:0;line-height:0}
+  .logo-am::before{content:"A&M";font-size:40px;line-height:1;font-weight:500;letter-spacing:-.01em}
+  .gitter>section{padding:22px 18px}
+}
+
 </style>
 </head>
 <body>
