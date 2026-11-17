@@ -595,7 +595,17 @@ soeg.addEventListener('input', () => {
       + (rest > 0 ? `<span class="mere">+ ${rest} flere – vælg modellen for at se alle</span>` : '');
   }).join('') : '<div class="ingen" style="padding:10px 14px">Ingen elbil fundet</div>';
   liste.style.display = 'block';
+  tilpasListe();
 });
+// iPhone: tastaturet dækker bunden af skærmen uden at vinduet bliver mindre, så listen skal stoppe over tastaturet
+// – ellers ligger de nederste modeller gemt bag det og kan ikke nås
+function tilpasListe(){
+  if (liste.style.display !== 'block') return;
+  const vv = window.visualViewport, bund = vv ? vv.offsetTop + vv.height : innerHeight;
+  liste.style.maxHeight = Math.max(160, bund - liste.getBoundingClientRect().top - 10) + 'px';
+}
+if (window.visualViewport){ visualViewport.addEventListener('resize', tilpasListe); visualViewport.addEventListener('scroll', tilpasListe); }
+addEventListener('resize', tilpasListe);
 soeg.addEventListener('keydown', e => {
   const knapper = [...liste.querySelectorAll('button')];
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); valgt = (valgt + (e.key==='ArrowDown'?1:-1) + knapper.length) % knapper.length; knapper.forEach((b,k)=>b.classList.toggle('aktiv',k===valgt)); }
