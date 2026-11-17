@@ -844,6 +844,11 @@ tegnModel();
 #dans .indhold{position:relative;padding:24px max(16px,env(safe-area-inset-left,0px));max-width:560px}
 #dans h2{display:block;font-size:clamp(26px,6vw,44px);margin:0 0 6px;letter-spacing:.01em;text-transform:none}
 #dans p{font-size:clamp(15px,3.6vw,19px);margin:0 auto;max-width:440px;opacity:.9;line-height:1.5}
+#dans video{display:block;margin:8px auto 10px;width:auto;max-width:min(88vw,420px);max-height:68vh;aspect-ratio:9/16;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);background:#000}
+#lydknap{position:relative;margin:-70px auto 30px;display:block;font:700 16px Montserrat,system-ui,sans-serif;padding:12px 20px;border:0;border-radius:999px;background:#ffb307;color:#202a45;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5)}
+#lydknap[hidden]{display:none}
+#taeller{position:fixed;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:95;font:700 14px Montserrat,system-ui,sans-serif;background:#202a45;color:#fff;padding:9px 14px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.4);font-variant-numeric:tabular-nums}
+#taeller.snart{background:#d93636}
 #dans svg{width:min(78vw,340px);height:auto;display:block;margin:6px auto 4px;overflow:visible}
 /* Erik danser: krop gynger, arme svinger, ben sparker skiftevis, stokken drejer */
 .erik{animation:gyng .5s ease-in-out infinite alternate;transform-origin:150px 330px}
@@ -865,41 +870,15 @@ tegnModel();
 @keyframes note{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(30px,-90px) rotate(20deg)}}
 @media (prefers-reduced-motion:reduce){#dans *{animation-duration:2s!important}}
 </style>
+<div id="taeller" hidden aria-live="off">Prøvetid 5:00</div>
 <div id="dans" role="dialog" aria-modal="true" aria-label="Prøvetiden er slut">
   <div class="lys l1"></div><div class="lys l2"></div><div class="lys l3"></div>
   <div class="kugle"></div>
   <div class="indhold">
     <h2>Prøvetiden er slut!</h2>
-    <svg viewBox="0 0 300 360" aria-hidden="true">
-      <g class="note"><text x="215" y="120" font-size="34" fill="#ffd23f">♪</text></g>
-      <g class="note n2"><text x="60" y="110" font-size="30" fill="#ff3fa4">♫</text></g>
-      <g class="note n3"><text x="230" y="70" font-size="26" fill="#3fd0ff">♪</text></g>
-      <g class="erik">
-        <!-- ben med brune bukser og sko -->
-        <g class="ben-v"><path d="M136 262 L126 322" stroke="#6b4a2b" stroke-width="20" stroke-linecap="round"/><ellipse cx="120" cy="328" rx="18" ry="8" fill="#2a1a10"/></g>
-        <g class="ben-h"><path d="M164 262 L176 322" stroke="#6b4a2b" stroke-width="20" stroke-linecap="round"/><ellipse cx="182" cy="328" rx="18" ry="8" fill="#2a1a10"/></g>
-        <!-- krop: grøn cardigan med knapper -->
-        <path d="M118 165 Q150 150 182 165 L188 265 Q150 278 112 265 Z" fill="#4f7a4a"/>
-        <path d="M150 160 L150 270" stroke="#3b5e37" stroke-width="3"/>
-        <circle cx="157" cy="190" r="3" fill="#e9d9a8"/><circle cx="157" cy="212" r="3" fill="#e9d9a8"/><circle cx="157" cy="234" r="3" fill="#e9d9a8"/>
-        <!-- arme; venstre holder stokken -->
-        <g class="arm-v"><path d="M122 168 L86 222" stroke="#4f7a4a" stroke-width="16" stroke-linecap="round"/><circle cx="84" cy="226" r="9" fill="#f1c9a5"/>
-          <g class="stok"><path d="M62 230 L106 222" stroke="#8a5a2b" stroke-width="6" stroke-linecap="round"/><path d="M106 222 q10 -2 10 -12" stroke="#8a5a2b" stroke-width="6" fill="none" stroke-linecap="round"/></g></g>
-        <g class="arm-h"><path d="M178 168 L214 222" stroke="#4f7a4a" stroke-width="16" stroke-linecap="round"/><circle cx="216" cy="226" r="9" fill="#f1c9a5"/></g>
-        <!-- hoved: skaldet, hvide tjavser, briller, stort hvidt skæg -->
-        <g class="hoved">
-          <circle cx="150" cy="118" r="34" fill="#f1c9a5"/>
-          <path d="M116 112 q-6 -14 6 -20 M184 112 q6 -14 -6 -20" stroke="#eee" stroke-width="7" fill="none" stroke-linecap="round"/>
-          <circle cx="138" cy="114" r="9" fill="none" stroke="#333" stroke-width="3"/><circle cx="162" cy="114" r="9" fill="none" stroke="#333" stroke-width="3"/>
-          <path d="M147 114 h6" stroke="#333" stroke-width="3"/>
-          <circle cx="138" cy="114" r="2.5" fill="#333"/><circle cx="162" cy="114" r="2.5" fill="#333"/>
-          <path d="M120 128 Q150 190 180 128 Q165 140 150 136 Q135 140 120 128Z" fill="#f4f4f4"/>
-          <path d="M140 140 q10 8 20 0" stroke="#c0392b" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <ellipse cx="150" cy="124" rx="5" ry="4" fill="#e3a98a"/>
-        </g>
-      </g>
-    </svg>
-    <p>Erik på 87 fejrer, at dine 5 minutter er gået.<br>Vil du regne videre, så spørg ham, der sendte dig linket.</p>
+    <video id="erikvid" src="../erik.mp4" poster="../erik.jpg" playsinline loop preload="metadata"></video>
+    <button type="button" id="lydknap" hidden>🔊 Tryk for at høre Erik</button>
+    <p>Vil du regne videre, så spørg ham, der sendte dig linket.</p>
   </div>
 </div>
 <script>
@@ -939,8 +918,24 @@ tegnModel();
     const g = +hent(NOEGLE); if (g) start = g; else gem(NOEGLE, String(start));
     slut = start + MIN * 60 * 1000;
   }
-  const vis = () => { document.getElementById('dans').classList.add('vis'); document.body.style.overflow = 'hidden'; };
-  if (Date.now() >= slut) vis(); else setTimeout(vis, slut - Date.now());
+  const vis = () => {
+    document.getElementById('taeller').hidden = true;
+    document.getElementById('dans').classList.add('vis'); document.body.style.overflow = 'hidden';
+    const v = document.getElementById('erikvid'), k = document.getElementById('lydknap');
+    v.muted = false;
+    v.play().catch(() => { v.muted = true; v.play().catch(() => {}); k.hidden = false; });
+    k.onclick = () => { v.muted = false; v.currentTime = 0; v.play(); k.hidden = true; };
+  };
+  const t = document.getElementById('taeller');
+  const tik = () => {
+    const rest = Math.max(0, slut - Date.now());
+    if (rest <= 0){ vis(); return; }
+    const sek = Math.ceil(rest / 1000);
+    t.textContent = 'Prøvetid ' + Math.floor(sek / 60) + ':' + String(sek % 60).padStart(2, '0');
+    t.classList.toggle('snart', sek <= 60); t.hidden = false;
+    setTimeout(tik, 1000 - (rest % 1000) + 5);
+  };
+  tik();
 })();
 </script>
 
