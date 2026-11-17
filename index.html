@@ -221,6 +221,7 @@ h1{text-shadow:0 0 40px rgba(139,120,255,.35)}
       <div class="forslag" id="forslag" role="listbox"></div>
     </div>
     <button class="knap" id="gem">Husk mine valg</button>
+    <button class="knap" id="pdf" type="button">Gem som PDF</button>
     <button class="knap" id="del">Del</button>
   </div>
 </header>
@@ -614,6 +615,7 @@ $('h2').addEventListener('pointerdown', traek('b'));
   opdater();
 }));
 
+$('pdf').addEventListener('click', () => $('print').click());
 $('print').addEventListener('click', () => {
   lavUdskrift();
   try { window.print(); } catch(e){ vis('Udskrift virker ikke i denne visning – åbn linket i Safari eller Chrome'); }
