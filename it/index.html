@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>A&amp;M elbil rækkevidde</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Lato:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --tekst:#1b1f27; --daempet:#5a6170; --linje:#d5d9de; --felt:#eceef1;
+  --navy:#1f2a3c; --navy-tekst:#ffffff; --bronze:#9a7448; --haandtag:#1f2a3c; --fokus:#3b6fd8;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12161d; --tekst:#e9ecf1; --daempet:#a3aab6; --linje:#343b47; --felt:#1d232d;
+    --navy:#0b111b; --navy-tekst:#ffffff; --bronze:#c99c69; --haandtag:#e9ecf1; --fokus:#7aa2ff;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12161d; --tekst:#e9ecf1; --daempet:#a3aab6; --linje:#343b47; --felt:#1d232d;
+  --navy:#0b111b; --navy-tekst:#ffffff; --bronze:#c99c69; --haandtag:#e9ecf1; --fokus:#7aa2ff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tekst);font-family:Lato,system-ui,sans-serif;font-size:15px;line-height:1.55}
+.ramme{max-width:1170px;margin:0 auto;padding:0 16px}
+.top{background:var(--navy);color:var(--navy-tekst)}
+.top .ramme{display:flex;align-items:center;gap:16px;min-height:64px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.logo{font-family:Jost,sans-serif;letter-spacing:.18em;font-size:13px;text-transform:uppercase;border-bottom:2px solid var(--bronze);padding-bottom:3px;white-space:nowrap}
+.soeg{position:relative;flex:1;min-width:220px}
+.soeg input{width:100%;padding:11px 14px 11px 38px;border:1px solid #ffffff55;background:#ffffff14;color:#fff;font:inherit;border-radius:0}
+.soeg input::placeholder{color:#ffffffaa}
+.soeg svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.8}
+.forslag{position:absolute;left:0;right:0;top:100%;background:var(--bg);color:var(--tekst);border:1px solid var(--linje);z-index:20;max-height:340px;overflow:auto;display:none;box-shadow:0 8px 24px #0003}
+.forslag button{display:block;width:100%;text-align:left;padding:10px 14px;border:0;background:none;color:inherit;font:inherit;cursor:pointer;border-bottom:1px solid var(--linje)}
+.forslag button:hover,.forslag button.aktiv{background:var(--felt)}
+.forslag small{color:var(--daempet);margin-left:6px}
+.forslag .model{font-weight:700;padding-top:12px}
+.forslag .variant{padding:7px 14px 7px 30px;font-size:13.5px;border-bottom:0}
+.forslag .variant:last-of-type{border-bottom:1px solid var(--linje)}
+.forslag .mere{display:block;padding:4px 14px 10px 30px;font-size:12px;color:var(--daempet);border-bottom:1px solid var(--linje)}
+.knap{font-family:Jost,sans-serif;letter-spacing:.14em;font-size:12px;text-transform:uppercase;padding:11px 18px;border:2px solid #fff;background:transparent;color:#fff;cursor:pointer;white-space:nowrap}
+.knap:hover{background:#ffffff1f}
+h1{font-family:Jost,sans-serif;font-weight:400;letter-spacing:.12em;text-transform:uppercase;font-size:clamp(22px,3.4vw,34px);margin:56px 0 14px;line-height:1.2}
+.intro{margin:0 0 20px}
+.forbrug{margin:0 0 44px;color:var(--daempet)}
+.gitter{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px 80px}
+@media (max-width:820px){.gitter{grid-template-columns:minmax(0,1fr);gap:40px}}
+.gitter>section{min-width:0}
+@media (max-width:400px){.km{font-size:56px}.km span{font-size:18px;margin-left:4px}.resultat{flex-wrap:wrap;gap:6px}.resultat .lille{max-width:none}.resultat>div:last-child{margin-left:auto}}
+.radio .lille{min-width:0;overflow-wrap:anywhere}
+h2{font-family:Jost,sans-serif;font-weight:400;letter-spacing:.16em;text-transform:uppercase;font-size:19px;margin:0 0 18px;display:flex;align-items:center;gap:8px}
+.lille{font-family:Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase;font-size:12px}
+.info{width:20px;height:20px;border-radius:50%;border:1.3px solid currentColor;background:none;color:inherit;font:italic 12px Georgia,serif;cursor:pointer;padding:0;line-height:1}
+.forklar{display:none;font-size:13.5px;color:var(--daempet);background:var(--felt);padding:10px 14px;margin:-6px 0 18px;letter-spacing:0;text-transform:none}
+.forklar.vis{display:block}
+.blok{margin-bottom:44px}
+.radio{display:flex;align-items:center;gap:14px;margin:0 0 16px;cursor:pointer}
+.radio input{appearance:none;width:24px;height:24px;border:1.5px solid var(--tekst);border-radius:50%;margin:0;display:grid;place-items:center;flex:none;cursor:pointer}
+.radio input::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--tekst);transform:scale(0);transition:transform .15s}
+.radio input:checked::after{transform:scale(1)}
+.radio input:focus-visible,.chip:focus-visible,.haandtag:focus-visible,.skift input:focus-visible+span{outline:2px solid var(--fokus);outline-offset:3px}
+.radio .lille small{color:var(--daempet);letter-spacing:.08em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:Jost,sans-serif;letter-spacing:.12em;font-size:12px;padding:7px 12px;border:1.5px solid var(--linje);background:none;color:inherit;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--tekst);background:var(--tekst);color:var(--bg)}
+.bilfelt{position:relative;margin-top:40px}
+.foto{position:relative;margin:0;aspect-ratio:16/10;overflow:hidden;background:linear-gradient(180deg,var(--felt),var(--bg));box-shadow:0 30px 60px -30px #1f2a3c66,0 2px 6px #0000000f}
+.foto img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transform:scale(1.04);transition:opacity .6s ease,transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.foto img.klar{opacity:1;transform:scale(1)}
+.foto::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,#0b111b8c);pointer-events:none}
+.foto .bil{position:absolute;inset:18% 15% 22%;width:70%;opacity:.9}
+.foto figcaption{position:absolute;left:18px;bottom:52px;z-index:1;color:#fff;font-family:Jost,sans-serif;letter-spacing:.2em;text-transform:uppercase;font-size:13px;text-shadow:0 1px 8px #0008}
+.foto figcaption b{display:block;font-weight:500;font-size:22px;letter-spacing:.12em;margin-top:2px}
+.foto canvas{position:absolute;inset:0;width:100%;height:100%;display:none;cursor:grab;touch-action:pan-y}
+.foto.spin{background:#fff}
+.foto.spin canvas{display:block}
+.foto.spin canvas:active{cursor:grabbing}
+.foto.spin img,.foto.spin .bil{display:none}
+.foto.spin::after{background:none}
+.foto.spin figcaption{color:var(--navy);text-shadow:none;bottom:auto;top:16px}
+.drej{position:absolute;left:50%;bottom:54px;transform:translateX(-50%);font-family:Jost,sans-serif;letter-spacing:.2em;text-transform:uppercase;font-size:11px;color:var(--navy);background:#ffffffd9;padding:6px 14px;border-radius:20px;display:none;z-index:1;transition:opacity .4s;pointer-events:none}
+.foto.spin .drej{display:block}
+.resultat{position:relative;margin:-42px 18px 0;background:var(--navy);color:var(--navy-tekst);display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:22px 24px 18px;box-shadow:0 24px 40px -20px #0b111b99;z-index:2}
+.resultat::before{content:"";position:absolute;left:0;top:0;height:3px;width:var(--andel,100%);background:linear-gradient(90deg,var(--bronze),#d8b98e);transition:width .5s cubic-bezier(.2,.7,.2,1)}
+.resultat .lille{max-width:250px;line-height:1.7;font-size:12px;opacity:.85}
+.km{font-family:Jost,sans-serif;font-weight:400;font-size:clamp(64px,9vw,88px);line-height:.9;white-space:nowrap;font-variant-numeric:tabular-nums}
+.km span{font-size:22px;margin-left:8px}
+.forskel{display:block;font-family:Lato,sans-serif;font-size:12px;letter-spacing:.06em;text-align:right;margin-top:8px;opacity:.8}
+.blanding{position:relative;height:56px;margin:20px 0 0;border:1px solid var(--linje);background:var(--felt);display:flex;touch-action:none;user-select:none}
+.seg{display:grid;place-items:center;border-right:1px solid var(--linje);overflow:hidden;color:var(--tekst)}
+.seg:last-child{border-right:0}
+.haandtag{position:absolute;width:28px;height:28px;border-radius:50%;background:var(--haandtag);color:var(--bg);display:grid;place-items:center;transform:translate(-50%,-50%);cursor:ew-resize;border:0;padding:0}
+.h1{top:0}.h2{top:100%}
+.procenter{display:flex;justify-content:space-between;margin-top:22px}
+.procenter div{text-align:center}.procenter div:first-child{text-align:left}.procenter div:last-child{text-align:right}
+.procenter b{display:block;font-family:Jost,sans-serif;font-weight:500;color:var(--bronze);letter-spacing:.08em;font-size:14px}
+.temp{position:relative;padding-top:30px}
+.soh input{background:linear-gradient(90deg,#e8913a,#e9c54a 45%,#6fe0c0)!important}
+.temp input{width:100%;appearance:none;height:3px;background:linear-gradient(90deg,#3d7bd9,#4fa6e0 40%,#9bd17a 62%,#e9c54a 80%,#e8913a);margin:0;outline:none}
+.temp input::-webkit-slider-thumb{appearance:none;width:30px;height:30px;border-radius:50%;background:var(--haandtag);cursor:pointer;border:0}
+.temp input::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--haandtag);cursor:pointer;border:0}
+.temp input:focus-visible::-webkit-slider-thumb{outline:2px solid var(--fokus);outline-offset:3px}
+.temp .vaerdi{position:absolute;top:0;transform:translateX(-50%);font-weight:700;font-size:12px;letter-spacing:.1em;white-space:nowrap}
+.temp .ender{display:flex;justify-content:space-between;margin-top:12px;font-weight:700;font-size:12px;letter-spacing:.1em}
+.skift{display:inline-flex;align-items:center;gap:10px;cursor:pointer}
+.skift input{position:absolute;opacity:0}
+.skift span.spor{width:38px;height:20px;border:1.5px solid var(--tekst);border-radius:12px;position:relative}
+.skift span.spor::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:var(--daempet);transition:transform .15s,background .15s}
+.skift input:checked+span.spor::after{transform:translateX(18px);background:var(--tekst)}
+.ansvar{margin:40px 0 0;padding:28px 0 60px;border-top:1px solid var(--linje);font-size:13px;color:var(--daempet)}
+.ansvar h3{font-family:Jost,sans-serif;font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:14px;color:var(--tekst);margin:0 0 8px}
+.ansvar a{color:inherit}
+.besked{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;font-size:14px;display:none;z-index:30}
+.ingen{color:var(--daempet);font-size:14px}
+.knap-print{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:18px;padding:13px 16px;border:1.5px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:600 14px/1.2 Lato,system-ui,sans-serif;letter-spacing:.04em;cursor:pointer}
+.knap-print:hover{background:var(--felt)}
+#udskrift{display:none}
+/* Udskrift/PDF: kun et rent resumé-ark, sort på hvidt */
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff!important;color:#111!important}
+  body>*:not(#udskrift){display:none!important}
+  #udskrift{display:block!important;font-family:Lato,Helvetica,Arial,sans-serif;color:#111}
+  #udskrift h1{font:700 22px/1.2 Helvetica,Arial,sans-serif;margin:0 0 2px;text-transform:none;letter-spacing:0;text-shadow:none;color:#111}
+  #udskrift .dato{color:#555;font-size:12px;margin:0 0 14px}
+  #udskrift .bil{display:flex;gap:18px;align-items:center;margin:0 0 14px}
+  #udskrift .bil img{width:62mm;height:40mm;object-fit:cover;border-radius:3mm;border:1px solid #ddd}
+  #udskrift .navn{font-size:18px;font-weight:700}
+  #udskrift .variant{color:#333;font-size:13px;margin-top:2px}
+  #udskrift .km{font:700 54px/1 Helvetica,Arial,sans-serif;color:#111;margin-top:8px}
+  #udskrift .km span{font-size:18px;margin-left:4px}
+  #udskrift .km small{display:block;font-size:12px;font-weight:400;color:#555;margin-top:4px}
+  #udskrift table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 12px}
+  #udskrift th,#udskrift td{text-align:left;padding:7px 8px;border-bottom:1px solid #ddd;vertical-align:top}
+  #udskrift th{width:42%;color:#444;font-weight:600}
+  #udskrift .note{font-size:10.5px;color:#555;line-height:1.5;margin:4px 0 0}
+}
+.drej{white-space:nowrap}
+@media (max-width:600px){
+  .top .ramme{gap:10px}
+  .soeg{order:3;flex-basis:100%}
+  .logo{flex:1}
+  .knap{padding:8px 12px;font-size:11px}
+  .top .ramme>.knap{white-space:normal;text-align:center;line-height:1.2}
+  .resultat{margin:-30px 10px 0;padding:16px}
+  .resultat .lille{font-size:10.5px}
+}
+/* Glastema i Aylas stil (Maliks ønske 17/11): mørk violet grund med farveskær, alt i frostede glaskort.
+   :root:not(.a):not(.b) slår skabelonens mørk/lys-blokke, så temaet er det samme uanset systemets tema. */
+:root:not(.a):not(.b){
+  --bg:#0c0a1f; --tekst:#eeecff; --daempet:#aaa6cc; --linje:rgba(255,255,255,.14); --felt:rgba(255,255,255,.06);
+  --navy:rgba(18,14,44,.6); --navy-tekst:#ffffff; --bronze:#6fe0c0; --haandtag:#8b78ff; --fokus:#6fe0c0;
+  --glas:rgba(255,255,255,.055); --glas-kant:rgba(255,255,255,.13); --violet:#8b78ff; --mint:#6fe0c0; --rosa:#ff6f9a;
+  color-scheme:dark;
+}
+body{
+  background:
+    radial-gradient(1100px 700px at 8% -8%, rgba(124,108,255,.38), transparent 60%),
+    radial-gradient(900px 620px at 102% 18%, rgba(47,211,160,.20), transparent 60%),
+    radial-gradient(900px 640px at 45% 112%, rgba(255,111,154,.18), transparent 62%),
+    var(--bg);
+}
+html{-webkit-text-size-adjust:100%}
+.top{background:rgba(12,8,30,.5);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-bottom:1px solid var(--glas-kant);position:sticky;top:0;z-index:15}
+.logo{border-bottom-color:var(--violet)}
+.logo-am{color:#c9c6e6}
+.soeg input{border-radius:999px;background:rgba(255,255,255,.07);border-color:var(--glas-kant)}
+.forslag{background:rgba(20,16,48,.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:16px;border-color:var(--glas-kant);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;max-height:min(65vh,520px)}
+.forslag button{border-bottom-color:var(--glas-kant)}
+.knap{border:1px solid rgba(255,255,255,.3);border-radius:999px;background:rgba(255,255,255,.06)}
+.knap:hover{background:rgba(139,120,255,.25)}
+h1{text-shadow:0 0 40px rgba(139,120,255,.35)}
+
+/* Kolonnerne som glaskort */
+.gitter>section{background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid var(--glas-kant);border-radius:24px;padding:30px 28px;
+  box-shadow:0 24px 70px -28px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.08)}
+@media (max-width:600px){.gitter>section{padding:22px 16px;border-radius:20px}}
+
+.chip{border-radius:999px;border-color:var(--glas-kant);background:rgba(255,255,255,.04)}
+.chip[aria-pressed="true"]{background:linear-gradient(135deg,var(--violet),#6c5cff);border-color:transparent;color:#fff;box-shadow:0 0 18px rgba(139,120,255,.5)}
+.radio input{border-color:rgba(255,255,255,.45)}
+.radio input::after{background:var(--mint);box-shadow:0 0 10px var(--mint)}
+.info{border-color:rgba(255,255,255,.5)}
+.forklar{background:rgba(255,255,255,.06);border:1px solid var(--glas-kant);border-radius:14px}
+
+.blanding{border-radius:14px;border-color:var(--glas-kant);background:rgba(255,255,255,.05)}
+.seg{border-right-color:var(--glas-kant)}
+.seg:first-child{border-radius:14px 0 0 14px}.seg:last-child{border-radius:0 14px 14px 0}
+.haandtag{background:var(--violet);color:#fff;box-shadow:0 0 0 4px rgba(139,120,255,.22),0 0 20px rgba(139,120,255,.7)}
+.procenter b{color:var(--mint)}
+.temp input::-webkit-slider-thumb{background:var(--violet);box-shadow:0 0 0 4px rgba(139,120,255,.25),0 0 20px rgba(139,120,255,.7)}
+.temp input::-moz-range-thumb{background:var(--violet);box-shadow:0 0 0 4px rgba(139,120,255,.25),0 0 20px rgba(139,120,255,.7)}
+.skift span.spor{border-color:rgba(255,255,255,.5)}
+.skift input:checked+span.spor::after{background:var(--mint);box-shadow:0 0 10px var(--mint)}
+
+/* Bilen på frostet lyst glas, så producenternes hvide studiebilleder flyder ind */
+.foto{border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(235,233,250,.86));box-shadow:0 30px 70px -30px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.5)}
+.foto.spin{background:#fff}
+.resultat{background:linear-gradient(135deg,rgba(124,108,255,.62),rgba(47,211,160,.38));border:1px solid rgba(255,255,255,.28);border-radius:20px;
+  backdrop-filter:blur(26px) saturate(160%);-webkit-backdrop-filter:blur(26px) saturate(160%);box-shadow:0 26px 60px -24px rgba(108,92,255,.8)}
+.resultat::before{border-radius:20px 0 0 0;background:linear-gradient(90deg,var(--mint),#fff)}
+.km{text-shadow:0 0 34px rgba(255,255,255,.35)}
+
+.ansvar{border-top-color:var(--glas-kant)}
+.besked{background:rgba(20,16,48,.92);border:1px solid var(--glas-kant);border-radius:999px;backdrop-filter:blur(16px)}
+
+.logo-am{text-transform:none;letter-spacing:.01em;font-family:Lato,system-ui,sans-serif;font-size:24px;color:#c9c6e6;border-bottom:0;padding-bottom:0}
+@media (max-width:600px){.logo-am{font-size:20px}}
+/* A&M-appens udseende, aflæst på am.dk 17/11 (brorens ønske): koksgrå flader, gul accent (#ffb307),
+   hvide felter med mørkeblå tekst (#202a45), Montserrat. Lægges oven på glastemaet og slår det fra. */
+:root:not(.a):not(.b):not(.c){
+  --bg:#3a3a3a; --tekst:#ffffff; --daempet:#c9ccd1; --linje:rgba(255,255,255,.16); --felt:#ffffff;
+  --navy:#202a45; --navy-tekst:#ffffff; --bronze:#ffb307; --haandtag:#ffb307; --fokus:#ffb307;
+  --gul:#ffb307; --panel:#4a4a4a; --felt-tekst:#202a45; --graa-tekst:#868e96;
+  color-scheme:dark;
+}
+body{background:var(--bg);font-family:Montserrat,system-ui,sans-serif}
+.top{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0}
+.logo,.logo-am{font-family:Montserrat,system-ui,sans-serif;font-weight:500;font-size:30px;color:#fff;letter-spacing:.01em;border-bottom:0}
+@media (max-width:600px){.logo-am{font-size:22px}}
+.soeg input{background:#fff;color:var(--felt-tekst);border:0;border-radius:4px;font-family:Montserrat,sans-serif;font-weight:500}
+.soeg input::placeholder{color:var(--graa-tekst)}
+.soeg svg{color:var(--felt-tekst);opacity:1}
+.forslag{background:#fff;color:var(--felt-tekst);border:0;border-radius:6px;box-shadow:0 12px 30px rgba(0,0,0,.35);backdrop-filter:none;-webkit-backdrop-filter:none}
+.forslag button{color:var(--felt-tekst);border-bottom-color:#e6e8eb}
+.forslag button:hover,.forslag button.aktiv{background:#fff4d6}
+.forslag small,.forslag .mere{color:var(--graa-tekst)}
+.forslag .mere{border-bottom-color:#e6e8eb}
+.knap{border:1px solid #fff;border-radius:4px;background:transparent;font-family:Montserrat,sans-serif;font-weight:600;letter-spacing:.04em;text-transform:none;font-size:14px}
+.knap:hover{background:rgba(255,255,255,.1)}
+
+h1{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-spacing:0;text-shadow:none;font-size:clamp(26px,3.6vw,40px)}
+h2{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-spacing:0;font-size:18px}
+.lille,.chip,.procenter b,.temp .vaerdi,.temp .ender,.resultat .lille{font-family:Montserrat,sans-serif;letter-spacing:.02em}
+.lille{text-transform:none;font-size:13px;font-weight:500}
+.intro{color:#fff}.forbrug{color:var(--daempet)}
+
+/* Kolonnerne som am.dk's grå paneler */
+.gitter>section{background:var(--panel);border:0;border-radius:8px;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+
+.chip{background:#fff;color:var(--felt-tekst);border:0;border-radius:4px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--gul);color:var(--felt-tekst);box-shadow:none}
+.radio input{border:2px solid #fff;background:transparent}
+.radio input::after{background:var(--gul);box-shadow:none}
+.info{border-color:#fff}
+.forklar{background:rgba(0,0,0,.18);border:0;border-radius:6px;color:#e6e8eb}
+
+.blanding{background:#fff;border:0;border-radius:4px}
+.seg{color:var(--felt-tekst);border-right-color:#e6e8eb}
+.seg:first-child{border-radius:4px 0 0 4px}.seg:last-child{border-radius:0 4px 4px 0}
+.haandtag{background:#fff;color:var(--felt-tekst);border:3px solid var(--gul);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.procenter b{color:var(--gul)}
+.temp input::-webkit-slider-thumb{background:#fff;border:3px solid var(--gul);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.temp input::-moz-range-thumb{background:#fff;border:3px solid var(--gul);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.soh input{background:var(--gul)!important}
+.skift span.spor{border-color:#fff}
+.skift input:checked+span.spor{background:var(--gul);border-color:var(--gul)}
+.skift input:checked+span.spor::after{background:#fff;box-shadow:none}
+
+/* Bil og resultat som am.dk's hvide kort */
+.foto{border-radius:8px;background:#fff;box-shadow:none}
+.foto figcaption{font-family:Montserrat,sans-serif;letter-spacing:.04em}
+.resultat{background:#fff;color:var(--felt-tekst);border:0;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:none;-webkit-backdrop-filter:none}
+.resultat::before{background:var(--gul);border-radius:8px 0 0 0;height:4px}
+.km{font-family:Montserrat,sans-serif;font-weight:700;text-shadow:none;color:var(--felt-tekst)}
+.forskel{color:var(--graa-tekst);opacity:1}
+
+.ansvar{border-top-color:var(--linje);color:var(--daempet)}
+.ansvar h3{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-spacing:0;color:#fff}
+.besked{background:var(--navy);border:0;border-radius:4px;backdrop-filter:none}
+
+/* Præcis som am.dk (brorens ønske 17/11): kolonnerne som am.dk's hvide nyhedskort med mørkeblå tekst,
+   "A&M" som logo på mobil, tynd grå brødtekst, gul accent. Tokens omdefineres inde i kortene. */
+.gitter>section{background:#ffffff;border-radius:10px;padding:28px 24px;
+  --tekst:#202a45; --daempet:#596d78; --linje:#e3e6ea; --felt:#f2f2f2; color:#202a45}
+.gitter>section h2{color:#202a45;font-weight:600;font-size:19px}
+.gitter>section .lille{color:#202a45}
+.gitter>section .lille small,.gitter>section .forklar{color:#596d78;font-weight:400}
+.gitter>section .forklar{background:#f2f2f2}
+.gitter>section .info{border-color:#202a45;color:#202a45}
+.gitter>section .chip{background:#f2f2f2;color:#202a45}
+.gitter>section .chip[aria-pressed="true"]{background:var(--gul);color:#202a45}
+.gitter>section .radio input{border-color:#202a45}
+.gitter>section .blanding{background:#f2f2f2}
+.gitter>section .seg{border-right-color:#dfe3e6}
+.gitter>section .procenter b{color:#ce9209}
+.gitter>section .procenter .lille{color:#596d78}
+.gitter>section .temp .vaerdi,.gitter>section .temp .ender{color:#202a45}
+.gitter>section .temp input{background:var(--gul)!important}
+.gitter>section .skift span.spor{border-color:#202a45}
+.gitter>section .skift input:not(:checked)+span.spor::after{background:#868e96}
+.gitter>section .resultat{background:#202a45;color:#fff}
+.gitter>section .resultat .km{color:#fff}
+.gitter>section .resultat .forskel{color:#c9ccd1}
+.foto{border-radius:10px}
+.intro{font-weight:400}.forbrug{font-weight:300}
+.ansvar p{font-weight:300}
+/* Knapperne som am.dk: Del er den gule hovedknap (som SØG), Gem har hvid kant (som Book tid) */
+#del{background:var(--gul);border-color:var(--gul);color:#202a45}
+#del:hover{background:#ffc23d}
+/* Logo: fuldt navn på pc, "A&M" på mobil som am.dk */
+.logo-am{font-weight:500}
+@media (max-width:600px){
+  .logo-am{font-size:0;line-height:0}
+  .logo-am::before{content:"A&M";font-size:40px;line-height:1;font-weight:500;letter-spacing:-.01em}
+  .gitter>section{padding:22px 18px}
+}
+
+/* Læsbarhed på iPhone (brorens skærmbillede 17/11): den lille tekst ved varianterne var for lys */
+.gitter>section .radio .lille small{color:#3f4d5a;font-weight:500;letter-spacing:.02em;font-size:11.5px}
+.gitter>section h2{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+/* Beskeden lægger sig øverst under toppen, så den ikke dækker overskrifter midt på siden */
+.besked{top:calc(76px + env(safe-area-inset-top,0px));bottom:auto;max-width:calc(100% - 32px);text-align:center}
+@media (max-width:600px){.besked{top:calc(120px + env(safe-area-inset-top,0px))}}
+/* Små telefoner: "Husk mine valg" må ikke gøre toppen bredere end skærmen */
+@media (max-width:400px){.logo-am::before{font-size:32px}.knap{padding:8px 10px;font-size:12px}}
+.gitter>section .resultat .lille{color:#ffffff;opacity:.9}
+
+.gitter>section .knap-print{color:#202a45;border-color:#202a45;font-family:Montserrat,sans-serif}
+.gitter>section .knap-print:hover{background:var(--gul);border-color:var(--gul)}
+
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="ramme">
+    <div class="logo logo-am">Andersen &amp; Martini</div>
+    <div class="soeg">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="soeg" type="search" autocomplete="off" placeholder="Søg fx Peugeot 208, Opel Corsa eller Leapmotor T03" aria-label="Søg elbil" aria-controls="forslag">
+      <div class="forslag" id="forslag" role="listbox"></div>
+    </div>
+    <button class="knap" id="gem">Husk mine valg</button>
+    <button class="knap" id="pdf" type="button">Gem som PDF</button>
+    <button class="knap" id="del">Del</button>
+  </div>
+</header>
+
+<main class="ramme">
+  <h1>Beregn din estimerede elektriske rækkevidde</h1>
+  <p class="intro">Se hvordan kørestil, temperatur og belastning påvirker din forventede rækkevidde</p>
+  <p class="forbrug" id="forbrug"></p>
+
+  <div class="gitter">
+    <section>
+      <div class="blok">
+        <h2>Model</h2>
+        <div class="lille" id="modelnavn"></div>
+      </div>
+      <div class="blok">
+        <h2>Årgang</h2>
+        <div class="chips" id="aargange"></div>
+      </div>
+      <div class="blok">
+        <h2>Tilgængelige varianter</h2>
+        <div id="varianter"></div>
+      </div>
+      <div class="blok" style="margin-bottom:0">
+        <h2>Batteriets tilstand <button class="info" data-for="f-soh" aria-label="Forklaring">i</button></h2>
+        <p class="forklar" id="f-soh">Et elbilbatteri mister lidt kapacitet med alder og opladninger, typisk 1–2 % om året. Batteriets tilstand (på engelsk State of Health, SoH) kan måles på værkstedet eller ses i nogle bilers app. 100 % er som ny. Rækkevidden falder i samme forhold, fordi bilen bruger lige så meget strøm pr. km, men har mindre at køre på.</p>
+        <div class="temp soh">
+          <span class="vaerdi" id="soh-vaerdi"></span>
+          <input type="range" id="soh" min="60" max="100" step="1" aria-label="Batteriets tilstand i procent">
+          <div class="ender"><span>60 %</span><span>100 % (som ny)</span></div>
+        </div>
+      </div>
+      <div class="bilfelt">
+       <figure class="foto">
+        <img id="foto" alt="">
+        <canvas id="spin" aria-label="Træk for at dreje bilen 360 grader"></canvas>
+        <span class="drej" id="drej">← Træk for at dreje →</span>
+        <figcaption><span id="f-maerke"></span><b id="f-model"></b></figcaption>
+        <svg class="bil" id="silhuet" viewBox="0 0 300 170" aria-hidden="true">
+          <defs><linearGradient id="lak" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f7887"/><stop offset="1" stop-color="#2e3542"/></linearGradient></defs>
+          <ellipse cx="150" cy="160" rx="135" ry="9" fill="#000" opacity=".35"/>
+          <path d="M40 120 Q38 95 58 86 L82 44 Q88 32 104 30 L196 30 Q212 32 218 44 L242 86 Q262 95 260 120 L260 140 Q260 150 248 150 L52 150 Q40 150 40 140Z" fill="url(#lak)"/>
+          <path d="M92 46 Q96 38 108 38 L192 38 Q204 38 208 46 L226 82 L74 82Z" fill="#1a2230"/>
+          <path d="M98 50 L202 50 L214 76 L86 76Z" fill="#2c3a50" opacity=".7"/>
+          <rect x="58" y="96" width="44" height="12" rx="6" fill="#e9eef5"/>
+          <rect x="198" y="96" width="44" height="12" rx="6" fill="#e9eef5"/>
+          <rect x="110" y="112" width="80" height="22" rx="4" fill="#202836"/>
+          <rect x="128" y="138" width="44" height="8" rx="2" fill="#cfd5dd" opacity=".8"/>
+          <rect x="44" y="140" width="26" height="18" rx="4" fill="#111"/>
+          <rect x="230" y="140" width="26" height="18" rx="4" fill="#111"/>
+        </svg>
+       </figure>
+        <div class="resultat" id="resultat">
+          <div class="lille">Estimeret rækkevidde baseret på fuldt opladet batteri</div>
+          <div><div class="km" aria-live="polite"><output id="km">0</output><span>KM</span></div><span class="forskel" id="forskel"></span></div>
+        </div>
+        <button class="knap-print" id="print" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7"/></svg>Udskriv / gem som PDF</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="blok">
+        <h2>Kørselsmønster <button class="info" data-for="f-moenster" aria-label="Forklaring">i</button></h2>
+        <p class="forklar" id="f-moenster">Bykørsel er det mest sparsomme: lav fart og bremser der lader batteriet op igen. På motorvej stiger luftmodstanden kraftigt med farten, så forbruget er markant højere. Træk i de to håndtag for at fordele din kørsel.</p>
+        <div class="blanding" id="blanding">
+          <div class="seg" id="s-by"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="3" width="10" height="18"/><path d="M15 9h4v12h-4M8 6h1M11 6h1M8 9h1M11 9h1M8 12h1M11 12h1M8 15h1M11 15h1M9 21v-3h2v3"/></svg></div>
+          <div class="seg" id="s-land"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M5 21c0-5 6-5 6-10S6 6 9 3M13 21c0-5 6-5 6-10s-3-5-1-8"/><circle cx="19" cy="5" r="2"/></svg></div>
+          <div class="seg" id="s-motor"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 9h18M4 21l3-12M20 21l-3-12M12 11v2M12 16v2M12 20v1M8 5V3h3v2M13 5V3h3v2"/></svg></div>
+          <button class="haandtag h1" id="h1" aria-label="Grænse mellem by og landevej" role="slider" aria-valuemin="0" aria-valuemax="100"><svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 1L1 5l3 4M10 1l3 4-3 4"/></svg></button>
+          <button class="haandtag h2" id="h2" aria-label="Grænse mellem landevej og motorvej" role="slider" aria-valuemin="0" aria-valuemax="100"><svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 1L1 5l3 4M10 1l3 4-3 4"/></svg></button>
+        </div>
+        <div class="procenter">
+          <div><b id="p-by"></b><span class="lille">By</span></div>
+          <div><b id="p-land"></b><span class="lille">Landevej</span></div>
+          <div><b id="p-motor"></b><span class="lille">Motorvej</span></div>
+        </div>
+      </div>
+
+      <div class="blok">
+        <h2>Udetemperatur <button class="info" data-for="f-temp" aria-label="Forklaring">i</button></h2>
+        <p class="forklar" id="f-temp">Batteriet arbejder bedst omkring 20–25 °C. I kulde er kemien træg, og en del af energien går til at holde batteriet varmt, så rækkevidden falder. Kan bilen varmes op mens den lader, mærkes det mindre.</p>
+        <div class="temp">
+          <span class="vaerdi" id="t-vaerdi"></span>
+          <input type="range" id="temp" min="-20" max="30" step="1" aria-label="Udetemperatur i grader">
+          <div class="ender"><span>-20 °C</span><span>30 °C</span></div>
+        </div>
+      </div>
+
+      <div class="blok">
+        <h2>Antal passagerer <button class="info" data-for="f-last" aria-label="Forklaring">i</button></h2>
+        <p class="forklar" id="f-last">Mere vægt giver mere rullemodstand og mere energi at sætte i gang ved hver acceleration. Fuldt lastet svarer til ca. 225 kg ekstra og koster omkring 5 % rækkevidde.</p>
+        <label class="radio"><input type="radio" name="last" value="0"><span class="lille">Kun føreren</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg></label>
+        <label class="radio"><input type="radio" name="last" value="1"><span class="lille">Fuldt lastet</span><svg width="20" height="16" viewBox="0 0 30 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="7" r="3.5"/><circle cx="21" cy="7" r="3.5"/><circle cx="15" cy="5" r="3"/><path d="M2 21c0-4 3-7 7-7M28 21c0-4-3-7-7-7M8 21c0-4 3-7 7-7s7 3 7 7"/></svg></label>
+      </div>
+
+      <div class="blok">
+        <h2>Aircondition <button class="info" data-for="f-ac" aria-label="Forklaring">i</button></h2>
+        <p class="forklar" id="f-ac">Klimaanlægget køler om sommeren og varmer om vinteren. Det bruger strøm hele tiden mens du kører, så det koster mest når du kører langsomt i byen, og mest af alt i kulde, hvor kabinen skal varmes op.</p>
+        <label class="skift"><span class="lille">Fra</span><input type="checkbox" id="ac" aria-label="Aircondition til"><span class="spor"></span><span class="lille">Til</span></label>
+      </div>
+    </section>
+  </div>
+
+  <div class="ansvar">
+    <p style="margin-top:0"><b>Uofficiel prototype – ikke lavet af eller godkendt af Andersen &amp; Martini.</b></p>
+    <h3>Sådan regnes der</h3>
+    <p>Udgangspunktet er bilens officielle WLTP-rækkevidde og brugbare batteri (kilde: <a href="https://evkx.net" target="_blank" rel="noopener">evkx.net</a>, der gengiver producenternes tal). Ved 33 % by, 24 % landevej, 43 % motorvej, 20 °C, kun føreren og aircondition fra giver beregningen præcis WLTP-tallet. Justeringerne for kørselsmønster, kulde, last og klimaanlæg er kalibreret efter en bilproducents egen rækkeviddeberegner; klimaanlæggets forbrug regnes i kW over tid, så det rammer bykørsel hårdest.</p>
+    <p>Rækkevidden er et estimat og kan ikke garanteres. Den faktiske rækkevidde afhænger også af fart, dæk, vind, bakker, udstyr, sædevarme og batteriets alder.</p>
+  </div>
+</main>
+<div class="besked" id="besked" role="status"></div>
+<section id="udskrift" aria-hidden="true"></section>
+
+<script>
+const D = [{"mk":"Peugeot","m":"e-208","url":"https://evkx.net/models/peugeot/208/","v":[{"n":"Peugeot E-208 50 kWh","d":"FWD","b":46.3,"r":363.0,"kw":"100","y":[2024,2025],"u":false},{"n":"Peugeot E-208 54 kWh","d":"FWD","b":51.0,"r":433.0,"kw":"100","y":[2025,2026],"u":false},{"n":"Peugeot E-208 GTi","d":"FWD","b":51.0,"r":350.0,"kw":"100","y":[2026],"u":false},{"n":"Peugeot E-208 50 kWh (GEN1)","d":"FWD","b":46.3,"r":363.0,"kw":"100","y":[2020,2021,2022,2023],"u":true},{"n":"Peugeot E-208 51 kWh","d":"FWD","b":48.1,"r":400.0,"kw":"100","y":[2024,2025],"u":true},{"n":"Peugeot E-208 51 kWh (GEN1)","d":"FWD","b":48.1,"r":400.0,"kw":"100","y":[2023],"u":true}],"f":"foto/peugeot-208.jpg"},{"mk":"Peugeot","m":"e-308","url":"https://evkx.net/models/peugeot/308/","v":[{"n":"Peugeot E-308","d":"FWD","b":50.8,"r":410.0,"kw":"100","y":[2023,2024,2025],"u":true},{"n":"Peugeot E-308 SW","d":"FWD","b":50.8,"r":410.0,"kw":"100","y":[2024,2025,2026],"u":true}],"f":"foto/peugeot-308.jpg"},{"mk":"Peugeot","m":"e-2008","url":"https://evkx.net/models/peugeot/2008/","v":[{"n":"Peugeot E-2008","d":"FWD","b":50.8,"r":406.0,"kw":"100","y":[2023,2024],"u":false}],"f":"foto/peugeot-2008.jpg"},{"mk":"Peugeot","m":"e-3008","url":"https://evkx.net/models/peugeot/3008/","v":[{"n":"Peugeot E-3008","d":"FWD","b":73.0,"r":527.0,"kw":"160","y":[2025],"u":false},{"n":"Peugeot E-3008 Long Range","d":"FWD","b":98.0,"r":700.0,"kw":"160","y":[2024,2025],"u":false}],"f":"foto/peugeot-3008.jpg"},{"mk":"Peugeot","m":"e-5008","url":"https://evkx.net/models/peugeot/5008/","v":[{"n":"Peugeot E-5008","d":"FWD","b":73.0,"r":502.0,"kw":"160","y":[2025,2026],"u":false},{"n":"Peugeot E-5008 Long Range","d":"FWD","b":96.9,"r":668.0,"kw":"160","y":[2025,2026],"u":false}],"f":"foto/peugeot-5008.jpg"},{"mk":"Opel","m":"Astra Electric","url":"https://evkx.net/models/opel/astra/","v":[{"n":"Opel Astra Electric","d":"FWD","b":50.8,"r":413.0,"kw":"100","y":[2024,2025],"u":true},{"n":"Opel Astra Sports Tourer Electric","d":"FWD","b":50.8,"r":413.0,"kw":"100","y":[2026],"u":true}],"f":"foto/opel-astra.jpg"},{"mk":"Opel","m":"Corsa Electric","url":"https://evkx.net/models/opel/corsa/","v":[{"n":"Opel Corsa Electric 50 kWh","d":"FWD","b":46.0,"r":357.0,"kw":"100","y":[2024,2025,2026],"u":false},{"n":"Opel Corsa Electric 51 kWh Long Range","d":"FWD","b":48.1,"r":405.0,"kw":"100","y":[2024,2025],"u":false}],"f":"foto/opel-corsa.jpg"},{"mk":"Opel","m":"Frontera Electric","url":"https://evkx.net/models/opel/frontera/","v":[{"n":"Opel Frontera","d":"FWD","b":44.0,"r":306.0,"kw":"100","y":[2025,2026],"u":false}],"f":"foto/opel-frontera.jpg"},{"mk":"Opel","m":"Grandland Electric","url":"https://evkx.net/models/opel/grandland/","v":[{"n":"Opel Grandland","d":"FWD","b":73.0,"r":525.0,"kw":"160","y":[2025],"u":false},{"n":"Opel Grandland 97 kWh","d":"FWD","b":96.9,"r":694.0,"kw":"160","y":[2026],"u":false},{"n":"Opel Grandland AWD","d":"AWD","b":73.0,"r":501.0,"kw":"160","y":[2026],"u":false},{"n":"Opel Grandland 82 kWh","d":"FWD","b":82.2,"r":573.0,"kw":"160","y":[2026],"u":true}],"f":"foto/opel-grandland.jpg"},{"mk":"Opel","m":"Mokka Electric","url":"https://evkx.net/models/opel/mokka/","v":[{"n":"Opel Mokka Electric","d":"FWD","b":50.8,"r":406.0,"kw":"100","y":[2021,2022,2023,2024,2025,2026],"u":false},{"n":"Opel Mokka GSE","d":"FWD","b":51.0,"r":336.0,"kw":"100","y":[2026],"u":false}],"f":"foto/opel-mokka.jpg"},{"mk":"Leapmotor","m":"B10","url":"https://evkx.net/models/leapmotor/b10/","v":[{"n":"Leapmotor B10 56.2 kWh","d":"RWD","b":55.0,"r":361.0,"kw":"140","y":[2025,2026],"u":false},{"n":"Leapmotor B10 67.1 kWh","d":"RWD","b":65.0,"r":434.0,"kw":"168","y":[2025,2026],"u":false}],"f":"foto/leapmotor-b10.jpg"},{"mk":"Leapmotor","m":"C10","url":"https://evkx.net/models/leapmotor/c10/","v":[{"n":"Leapmotor C10 69kWh RWD","d":"RWD","b":67.0,"r":420.0,"kw":"80","y":[2024,2025,2026],"u":false},{"n":"Leapmotor C10 AWD 81.9 kWh","d":"AWD","b":81.9,"r":437.0,"kw":"180","y":[2026],"u":false},{"n":"Leapmotor C10 RWD 81.9 kWh","d":"RWD","b":81.9,"r":510.0,"kw":"180","y":[2026],"u":false}],"f":"foto/leapmotor-c10.jpg"},{"mk":"Leapmotor","m":"T03","url":"https://evkx.net/models/leapmotor/t03/","v":[{"n":"Leapmotor T03 37.3 kWh","d":"FWD","b":36.0,"r":265.0,"kw":"48","y":[2024,2025,2026],"u":false}],"f":"foto/leapmotor-t03.jpg"}];
+
+// Kalibrering aflæst i en producents beregner 17/11 2026. Forbrug i forhold til WLTP (1 = WLTP).
+const MIX = [0.7917, 0.9247, 1.2005];           // by, landevej, motorvej
+const FART = [30, 70, 105];                       // km/t – klimaanlæggets forbrug regnes over tid
+const KULDE = [[-20,.3232],[-10,.2539],[-5,.2157],[0,.1886],[5,.0788],[10,.0504],[15,.0257],[18,.0021],[20,0],[22,-.0062],[25,-.0164],[30,-.0304]];
+const KLIMA_KW = [[-20,3.21],[-10,2.75],[-5,2.75],[0,1.83],[5,1.85],[10,1.84],[15,.75],[18,.77],[20,.60],[22,.61],[25,.62],[30,1.52]];
+const LAST = 0.055;
+
+function interp(tab, x){
+  if (x <= tab[0][0]) return tab[0][1];
+  for (let i = 1; i < tab.length; i++) if (x <= tab[i][0]) {
+    const [x0,y0] = tab[i-1], [x1,y1] = tab[i];
+    return y0 + (y1-y0)*(x-x0)/(x1-x0);
+  }
+  return tab[tab.length-1][1];
+}
+
+const S = {m:0, y:0, v:0, a:33, b:57, t:20, l:0, ac:0, soh:100};
+
+function beregn(v){
+  const c0 = v.b / v.r;                            // kWh pr. km ved WLTP
+  const p = [S.a/100, (S.b-S.a)/100, (100-S.b)/100];
+  let u = p[0]*MIX[0] + p[1]*MIX[1] + p[2]*MIX[2];
+  u = u / (0.33*MIX[0] + 0.24*MIX[1] + 0.43*MIX[2]);
+  u += interp(KULDE, S.t);
+  if (S.l) u += LAST;
+  if (S.ac){
+    const timerPrKm = p[0]/FART[0] + p[1]/FART[1] + p[2]/FART[2];
+    u += interp(KLIMA_KW, S.t) * timerPrKm / c0;
+  }
+  // Batteriets tilstand: mindre brugbar kapacitet, samme forbrug pr. km
+  return {km: Math.round(v.r * S.soh / 100 / u), forbrug: 100 * c0 * u};
+}
+
+const $ = id => document.getElementById(id);
+const fmt = (x,d=1) => x.toLocaleString('da-DK',{minimumFractionDigits:d,maximumFractionDigits:d});
+const model = () => D[S.m];
+const aarListe = m => [...new Set(m.v.flatMap(v => v.y))].sort((a,b)=>b-a);
+const varianterFor = (m,y) => m.v.map((v,i)=>({v,i})).filter(o => o.v.y.includes(y));
+
+function tegnModel(){
+  const m = model();
+  $('modelnavn').textContent = m.mk + ' ' + m.m;
+  const aar = aarListe(m);
+  if (!aar.includes(S.y)) S.y = aar[0];
+  $('aargange').innerHTML = aar.map(y => `<button class="chip" aria-pressed="${y===S.y}" data-y="${y}">${y}</button>`).join('');
+  const vs = varianterFor(m, S.y);
+  if (!vs.some(o => o.i === S.v)) S.v = vs[0].i;
+  $('varianter').innerHTML = vs.map(o => `<label class="radio"><input type="radio" name="variant" value="${o.i}" ${o.i===S.v?'checked':''}><span class="lille">${esc(kortNavn(m, o.v))} <small>(${o.v.d} · ${fmt(o.v.b,o.v.b%1?1:0)} kWh · WLTP ${o.v.r} km)</small></span></label>`).join('');
+  opdater();
+}
+
+// Udskrift/PDF: bygger et resumé af de valgte indstillinger lige før printvinduet åbner
+function lavUdskrift(){
+  const m = model(), v = m.v[S.v], r = beregn(v);
+  const p = [S.a, S.b - S.a, 100 - S.b];
+  let foto = '';
+  try {
+    const c = $('spin');
+    if (document.querySelector('.foto').classList.contains('spin') && c.width) foto = c.toDataURL('image/jpeg', 0.85);
+    else if ($('foto').src) foto = $('foto').src;
+  } catch(e){ foto = ''; }
+  // Kan 360-billedet ikke kopieres (fx når filen åbnes lokalt), bruges modellens almindelige foto
+  if (!foto) foto = v.f || m.f || '';
+  const navn = esc(m.mk + ' ' + m.m), dato = new Date().toLocaleDateString('da-DK', {day:'numeric', month:'long', year:'numeric'});
+  const raekker = [
+    ['Variant', esc(kortNavn(m, v)) + ` (${v.d})`], ['Årgang', S.y],
+    ['Batteri', `${fmt(v.b, v.b%1?1:0)} kWh brugbart`], ['Officiel WLTP-rækkevidde', `${v.r} km`],
+    ['Kørselsmønster', `By ${p[0]} % · Landevej ${p[1]} % · Motorvej ${p[2]} %`], ['Udetemperatur', `${S.t} °C`],
+    ['Antal passagerer', S.l ? 'Fuldt lastet' : 'Kun føreren'], ['Aircondition', S.ac ? 'Til' : 'Fra'],
+    ['Batteriets tilstand', `${S.soh} %` + (S.soh < 100 ? ` (ca. ${fmt(v.b*S.soh/100)} kWh at køre på)` : ' (som ny)')],
+    ['Estimeret forbrug', `${fmt(r.forbrug)} kWh/100 km`]
+  ];
+  const ansvar = document.querySelector('.ansvar p b');
+  $('udskrift').innerHTML = `<h1>Estimeret rækkevidde</h1><p class="dato">${dato}</p>
+    <div class="bil">${foto ? `<img src="${foto}" alt="">` : ''}<div><div class="navn">${navn}</div><div class="variant">${esc(kortNavn(m, v))} · ${S.y}</div>
+    <div class="km">${r.km}<span>km</span><small>ved fuldt opladet batteri under de valgte forhold</small></div></div></div>
+    <table>${raekker.map(([k, x]) => `<tr><th>${k}</th><td>${x}</td></tr>`).join('')}</table>
+    <p class="note">${ansvar ? esc(ansvar.textContent) + ' ' : ''}Rækkevidden er et estimat og kan ikke garanteres. Den afhænger også af fart, dæk, vind, bakker, udstyr og batteriets alder. Kilde til bildata: producenternes WLTP-tal via evkx.net.</p>`;
+}
+addEventListener('beforeprint', lavUdskrift);
+
+function opdater(){
+  const m = model(), v = m.v[S.v];
+  const r = beregn(v);
+  taelTil(r.km);
+  tegnFoto(m, v);
+  const pct = Math.round((r.km / v.r - 1) * 100);
+  $('forskel').textContent = pct === 0 ? 'Svarer til WLTP' : `${pct > 0 ? '+' : '−'}${Math.abs(pct)} % i forhold til WLTP`;
+  $('resultat').style.setProperty('--andel', Math.min(100, r.km / v.r * 100) + '%');
+  $('forbrug').textContent = `Officiel WLTP-rækkevidde for ${v.n}: ${v.r} km med ${fmt(v.b,v.b%1?1:0)} kWh brugbart batteri. Estimeret forbrug under dine forhold: ${fmt(r.forbrug)} kWh/100 km.` + (S.soh < 100 ? ` Med batteriet på ${S.soh} % er der ca. ${fmt(v.b*S.soh/100)} kWh at køre på.` : '');
+  const p = [S.a, S.b-S.a, 100-S.b];
+  $('s-by').style.width = p[0]+'%'; $('s-land').style.width = p[1]+'%'; $('s-motor').style.width = p[2]+'%';
+  $('h1').style.left = S.a+'%'; $('h2').style.left = S.b+'%';
+  $('h1').setAttribute('aria-valuenow', S.a); $('h2').setAttribute('aria-valuenow', S.b);
+  $('p-by').textContent = p[0]+'%'; $('p-land').textContent = p[1]+'%'; $('p-motor').textContent = p[2]+'%';
+  $('temp').value = S.t;
+  $('soh').value = S.soh;
+  $('soh-vaerdi').textContent = S.soh + ' %';
+  $('soh-vaerdi').style.left = `calc(${(S.soh-60)/40*100}% + ${15 - (S.soh-60)/40*30}px)`;
+  $('t-vaerdi').textContent = S.t + ' °C';
+  $('t-vaerdi').style.left = `calc(${(S.t+20)/50*100}% + ${15 - (S.t+20)/50*30}px)`;
+  document.querySelectorAll('input[name=last]').forEach(x => x.checked = +x.value === S.l);
+  $('ac').checked = !!S.ac;
+  try { history.replaceState(null, '', '#' + tok(m)); } catch(e){}
+}
+
+// Km-tallet glider op og ned i stedet for at springe
+let visKm = 0, kmMaal = 0, kmRaf = 0;
+function taelTil(maal){
+  kmMaal = maal;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches){ visKm = maal; $('km').textContent = maal; return; }
+  cancelAnimationFrame(kmRaf);
+  const start = visKm, t0 = performance.now(), varighed = 450;
+  const trin = t => {
+    const k = Math.min(1, (t - t0) / varighed), e = 1 - Math.pow(1 - k, 3);
+    visKm = Math.round(start + (kmMaal - start) * e);
+    $('km').textContent = visKm;
+    if (k < 1) kmRaf = requestAnimationFrame(trin);
+  };
+  kmRaf = requestAnimationFrame(trin);
+}
+
+// Foto af den valgte variant; findes det ikke, bruges modellens første foto, ellers silhuetten
+// 360°: billedserier hentet fra producenternes konfiguratorer, nøgle = mærke/model
+const SPIN = {"bmw/i4": {"ark": "spin/bmw-i4.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 472, "start": 3, "crop": [0.0, 0.3126, 1.0, 0.6483], "fyld": true, "bg": "#d8cfc6"}, "bmw/i5": {"ark": "spin/bmw-i5.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 472, "start": 3, "crop": [0.0, 0.3091, 1.0, 0.6426], "fyld": true, "bg": "#d8cfc6"}, "bmw/ix": {"ark": "spin/bmw-ix.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 472, "start": 3, "crop": [0.0, 0.2376, 1.0, 0.7182], "fyld": true, "bg": "#d8cfc6"}, "bmw/ix1": {"ark": "spin/bmw-ix1.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 472, "start": 3, "crop": [0.0, 0.2605, 1.0, 0.6939], "fyld": true, "bg": "#d8cfc6"}, "bmw/ix2": {"ark": "spin/bmw-ix2.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 472, "start": 3, "crop": [0.0, 0.247, 1.0, 0.7096], "fyld": true, "bg": "#d8cfc6"}, "bmw/ix3": {"ark": "spin/bmw-ix3.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 472, "start": 3, "crop": [0.0, 0.2371, 1.0, 0.7281], "fyld": true, "bg": "#d8cfc6"}, "lexus/rz": {"ark": "spin/lexus-rz.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 450, "start": 4, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": false, "bg": "#ffffff"}, "mazda/6e": {"ark": "spin/mazda-6e.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 405, "start": 5, "crop": [0.0112, 0.2371, 0.9776, 0.6201], "fyld": false, "bg": "#ffffff"}, "mazda/cx-6e": {"ark": "spin/mazda-cx-6e.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 405, "start": 5, "crop": [0.016, 0.2039, 0.9673, 0.6732], "fyld": false, "bg": "#ffffff"}, "mercedes/cla": {"ark": "spin/mercedes-cla.jpg", "n": 31, "kol": 6, "fw": 720, "fh": 350, "start": 0, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": true, "bg": "#adc4d4"}, "mercedes/eqa": {"ark": "spin/mercedes-eqa.jpg", "n": 31, "kol": 6, "fw": 720, "fh": 350, "start": 0, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": true, "bg": "#c6c8c3"}, "mercedes/eqe": {"ark": "spin/mercedes-eqe.jpg", "n": 31, "kol": 6, "fw": 720, "fh": 350, "start": 0, "crop": [0.0109, 0.2128, 0.9782, 0.7872], "fyld": true, "bg": "#e1e1e1"}, "mercedes/eqs": {"ark": "spin/mercedes-eqs.jpg", "n": 31, "kol": 6, "fw": 720, "fh": 350, "start": 0, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": true, "bg": "#d8d9db"}, "mini/aceman": {"ark": "spin/mini-aceman.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 292, "start": 0, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": true, "bg": "#c2b9b2"}, "mini/cooper": {"ark": "spin/mini-cooper.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 292, "start": 0, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": true, "bg": "#beb7af"}, "mini/countryman": {"ark": "spin/mini-countryman.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 292, "start": 0, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": true, "bg": "#a9a298"}, "skoda/elroq": {"ark": "spin/skoda-elroq.jpg", "n": 12, "kol": 6, "fw": 720, "fh": 405, "start": 0, "crop": [0.0895, 0.2258, 0.8228, 0.6172], "fyld": false, "bg": "#ffffff"}, "skoda/enyaq_iv": {"ark": "spin/skoda-enyaq_iv.jpg", "n": 12, "kol": 6, "fw": 720, "fh": 405, "start": 0, "crop": [0.0519, 0.2338, 0.895, 0.6135], "fyld": false, "bg": "#ffffff"}, "skoda/epiq": {"ark": "spin/skoda-epiq.jpg", "n": 12, "kol": 6, "fw": 720, "fh": 405, "start": 0, "crop": [0.1132, 0.2409, 0.7735, 0.6048], "fyld": false, "bg": "#ffffff"}, "subaru/solterra": {"ark": "spin/subaru-solterra.jpg", "n": 24, "kol": 6, "fw": 720, "fh": 305, "start": 3, "crop": [0.0, 0.0, 1.0, 1.0], "fyld": false, "bg": "#ffffff"}, "toyota/bz4x": {"ark": "spin/toyota-bz4x.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 410, "start": 2, "crop": [0.0, 0.1029, 1.0, 0.7877], "fyld": false, "bg": "#ffffff"}, "toyota/c-hrplus": {"ark": "spin/toyota-c-hrplus.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 410, "start": 2, "crop": [0.0, 0.114, 1.0, 0.7643], "fyld": false, "bg": "#ffffff"}, "toyota/urban_cruiser": {"ark": "spin/toyota-urban_cruiser.jpg", "n": 36, "kol": 6, "fw": 720, "fh": 410, "start": 2, "crop": [0.0, 0.075, 1.0, 0.8357], "fyld": false, "bg": "#ffffff"}};
+const spin = {frames: [], cache: [], klar: 0, p: 0, auto: true, raf: 0, noegle: ''};
+// spin.p er en flydende position (fx 4.3 = 30 % vej fra billede 4 til 5); nabobillederne tones over i hinanden,
+// så også serier med få vinkler drejer glidende
+function tegnSpin(){
+  const c = $('spin'), n = spin.frames.length;
+  if (!n) return;
+  const p = ((spin.p % n) + n) % n, a = Math.floor(p), b = (a + 1) % n;
+  // Få vinkler (fx Škodas 12): kort overtoning midt mellem to billeder, så bilen ikke ses dobbelt ret længe
+  const bred = n <= 16 ? 0.25 : 1, frac = Math.min(1, Math.max(0, (p - a - (1 - bred)/2) / bred));
+  const r = c.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  if (c.width !== Math.round(r.width*dpr)){ c.width = Math.round(r.width*dpr); c.height = Math.round(r.height*dpr); spin.cache = []; }
+  const ra = ramme(a, c), rb = frac > 0.02 ? ramme(b, c) : null;
+  if (!ra) return;
+  const ctx = c.getContext('2d');
+  ctx.globalAlpha = 1; ctx.drawImage(ra, 0, 0);
+  if (rb){ ctx.globalAlpha = frac; ctx.drawImage(rb, 0, 0); ctx.globalAlpha = 1; }
+}
+// Hvert billede tegnes (beskæring, sløring, bløde kanter) kun én gang i den aktuelle størrelse og gemmes;
+// selve drejningen lægger så bare to færdige billeder oven på hinanden – det holder den flydende
+function ramme(j, c){
+  if (spin.cache[j]) return spin.cache[j];
+  const f = spin.frames[j];
+  if (!f || !f.complete || !f.naturalWidth) return null;
+  const k = document.createElement('canvas'); k.width = c.width; k.height = c.height;
+  tegnRamme(f, k, k.getContext('2d'));
+  return spin.cache[j] = k;
+}
+function tegnRamme(f, c, ctx){
+  // Bilerne fylder midten af konfiguratorens billede; beskær luft væk så bilen bliver stor
+  const cr = SPIN[spin.noegle].crop || [0,0,1,1], sx = f.naturalWidth*cr[0], sy = f.naturalHeight*cr[1], sw = f.naturalWidth*cr[2], sh = f.naturalHeight*cr[3];
+  const d = SPIN[spin.noegle];
+  ctx.fillStyle = d.bg || '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  // Hele billedet tegnes, skaleret så bilen (sw×sh) fylder rammen pænt uden at blive skåret
+  if (d.fyld){
+    // Scenen dækker hele rammen (ingen synlige kanter); bilen centreres så godt scenen tillader
+    const sd = Math.max(c.width/f.naturalWidth, c.height/f.naturalHeight)*1.1;
+    ctx.filter = 'blur(28px)';
+    ctx.drawImage(f, (c.width - f.naturalWidth*sd)/2, (c.height - f.naturalHeight*sd)/2, f.naturalWidth*sd, f.naturalHeight*sd);
+    ctx.filter = 'none';
+    const s = Math.min(Math.max(c.width/f.naturalWidth, c.height/f.naturalHeight), c.width*0.94/sw, c.height*0.8/sh);
+    const ox = c.width/2 - (sx + sw/2)*s, oy = c.height*0.47 - (sy + sh/2)*s;
+    // Bløde kanter: tegn det skarpe billede gennem en maske der toner ud mod kanten
+    const w = f.naturalWidth*s, h = f.naturalHeight*s;
+    const tmp = spin.tmp || (spin.tmp = document.createElement('canvas'));
+    tmp.width = Math.ceil(w); tmp.height = Math.ceil(h);
+    const t = tmp.getContext('2d');
+    t.drawImage(f, 0, 0, w, h);
+    t.globalCompositeOperation = 'destination-in';
+    const kant = Math.min(w, h) * 0.08;
+    const gx = t.createLinearGradient(0, 0, w, 0);
+    gx.addColorStop(0, '#0000'); gx.addColorStop(kant/w, '#000f'); gx.addColorStop(1 - kant/w, '#000f'); gx.addColorStop(1, '#0000');
+    t.fillStyle = gx; t.fillRect(0, 0, w, h);
+    const gy = t.createLinearGradient(0, 0, 0, h);
+    gy.addColorStop(0, '#0000'); gy.addColorStop(kant/h, '#000f'); gy.addColorStop(1 - kant/h, '#000f'); gy.addColorStop(1, '#0000');
+    t.fillStyle = gy; t.fillRect(0, 0, w, h);
+    t.globalCompositeOperation = 'source-over';
+    ctx.drawImage(tmp, ox, oy);
+    return;
+  }
+  const s = Math.min(c.width*0.92/sw, c.height*0.78/sh);
+  const ox = c.width/2 - (sx + sw/2)*s, oy = c.height*0.47 - (sy + sh/2)*s;
+  ctx.drawImage(f, ox, oy, f.naturalWidth*s, f.naturalHeight*s);
+}
+function startSpin(k){
+  const fig = document.querySelector('.foto'), d = SPIN[k];
+  cancelAnimationFrame(spin.raf);
+  if (!d){ fig.classList.remove('spin'); spin.noegle = ''; return false; }
+  fig.classList.add('spin');
+  if (spin.noegle === k) return true;
+  spin.noegle = k; spin.p = d.start || 0; spin.auto = false; $('drej').style.opacity = 1;  // Maliks valg: bilen drejer kun når man trækker
+  spin.cache = []; spin.klar = 0;
+  if (d.ark){
+    // Den delte udgave: alle vinkler ligger i ét samlet billede (ark), som skæres op her
+    spin.frames = [];
+    const ark = new Image();
+    ark.onload = () => {
+      if (spin.noegle !== k) return;
+      spin.frames = Array.from({length: d.n}, (_, j) => {
+        const c = document.createElement('canvas'); c.width = d.fw; c.height = d.fh;
+        c.getContext('2d').drawImage(ark, (j % d.kol) * d.fw, Math.floor(j / d.kol) * d.fh, d.fw, d.fh, 0, 0, d.fw, d.fh);
+        c.naturalWidth = d.fw; c.naturalHeight = d.fh; c.complete = true; return c;
+      });
+      spin.klar = d.n; tegnSpin();
+    };
+    ark.src = d.ark;
+  } else
+  spin.frames = Array.from({length: d.n}, (_, j) => { const im = new Image(); im.onload = () => { spin.klar++; if (j === Math.floor(spin.p)) tegnSpin(); }; im.decoding = 'async'; im.src = `${d.dir}/${j+1}.jpg`; return im; });
+  let sidst = 0;
+  // Én omgang på ca. 9 sekunder uanset hvor mange billeder serien har
+  const loop = t => {
+    // Drejningen starter først når alle vinkler er hentet, ellers springer den billeder over
+    // Tegn én manglende vinkel pr. skærmopdatering, til alle er færdige – så hakker første omgang ikke
+    if (spin.klar === spin.frames.length && spin.cache.filter(Boolean).length < spin.frames.length){
+      const c = $('spin'), j = spin.frames.findIndex((_, i) => !spin.cache[i]); if (j >= 0) ramme(j, c);
+      sidst = t; spin.raf = requestAnimationFrame(loop); return;
+    }
+    if (spin.auto && sidst && spin.klar === spin.frames.length){ spin.p += Math.min(50, t - sidst) / 9000 * spin.frames.length; tegnSpin(); }
+    sidst = t;
+    spin.raf = requestAnimationFrame(loop);
+  };
+  spin.raf = requestAnimationFrame(loop);
+  return true;
+}
+(() => {
+  const c = $('spin'); let x0 = null, i0 = 0;
+  c.addEventListener('pointerdown', e => { x0 = e.clientX; i0 = spin.p; spin.auto = false; $('drej').style.opacity = 0; c.setPointerCapture(e.pointerId); });
+  c.addEventListener('pointermove', e => {
+    if (x0 === null) return;
+    const n = spin.frames.length, trin = c.getBoundingClientRect().width / n * 0.8;
+    spin.p = i0 - (e.clientX - x0) / trin; tegnSpin();
+  });
+  c.addEventListener('pointerup', () => x0 = null);
+  c.addEventListener('keydown', e => { const d = {ArrowLeft:1, ArrowRight:-1}[e.key]; if (d){ spin.auto = false; spin.p = Math.round(spin.p) + d; tegnSpin(); } });
+  c.tabIndex = 0;
+  addEventListener('resize', tegnSpin);
+})();
+
+function tegnFoto(m, v){
+  const img = $('foto'), src = v.f || m.f || '';
+  $('f-maerke').textContent = m.mk; $('f-model').textContent = m.m;
+  if (startSpin(noegle(m))) return;
+  if (img.dataset.src === src) return;
+  img.classList.remove('klar'); img.dataset.src = src;
+  $('silhuet').style.display = src ? 'none' : '';
+  if (src){ img.onload = () => img.classList.add('klar'); img.onerror = () => { $('silhuet').style.display = ''; }; img.src = src; img.alt = v.n; }
+  else { img.removeAttribute('src'); img.alt = ''; }
+}
+
+function esc(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+// Kørselsmønster: to håndtag på én bjælke
+function traek(h){
+  const bar = $('blanding');
+  const flyt = e => {
+    const r = bar.getBoundingClientRect();
+    let x = Math.round(Math.min(100, Math.max(0, (e.clientX - r.left) / r.width * 100)));
+    if (h === 'a') S.a = Math.min(x, S.b); else S.b = Math.max(x, S.a);
+    opdater();
+  };
+  const slip = () => { removeEventListener('pointermove', flyt); removeEventListener('pointerup', slip); };
+  return e => { e.preventDefault(); addEventListener('pointermove', flyt); addEventListener('pointerup', slip); };
+}
+$('h1').addEventListener('pointerdown', traek('a'));
+$('h2').addEventListener('pointerdown', traek('b'));
+[['h1','a'],['h2','b']].forEach(([id,k]) => $(id).addEventListener('keydown', e => {
+  const d = {ArrowLeft:-1, ArrowDown:-1, ArrowRight:1, ArrowUp:1}[e.key];
+  if (!d) return; e.preventDefault();
+  const s = e.shiftKey ? 10 : 1;
+  if (k==='a') S.a = Math.max(0, Math.min(S.b, S.a + d*s)); else S.b = Math.min(100, Math.max(S.a, S.b + d*s));
+  opdater();
+}));
+
+$('pdf').addEventListener('click', () => $('print').click());
+$('print').addEventListener('click', () => {
+  lavUdskrift();
+  try { window.print(); } catch(e){ vis('Udskrift virker ikke i denne visning – åbn linket i Safari eller Chrome'); }
+});
+$('soh').addEventListener('input', e => { S.soh = +e.target.value; opdater(); });
+$('temp').addEventListener('input', e => { S.t = +e.target.value; opdater(); });
+document.querySelectorAll('input[name=last]').forEach(x => x.addEventListener('change', () => { S.l = +x.value; opdater(); }));
+$('ac').addEventListener('change', e => { S.ac = e.target.checked ? 1 : 0; opdater(); });
+$('aargange').addEventListener('click', e => { const b = e.target.closest('[data-y]'); if (b){ S.y = +b.dataset.y; tegnModel(); } });
+$('varianter').addEventListener('change', e => { S.v = +e.target.value; opdater(); });
+document.querySelectorAll('.info').forEach(b => b.addEventListener('click', () => $(b.dataset.for).classList.toggle('vis')));
+
+// Søgning
+const soeg = $('soeg'), liste = $('forslag');
+let hits = [], valgt = -1;
+function vaelgModel(i, vi){
+  S.m = i; S.y = 0; S.v = 0;
+  // Klik på en variant: vælg den og dens nyeste årgang
+  if (vi !== undefined){ S.v = vi; S.y = Math.max(...D[i].v[vi].y); }
+  soeg.value = ''; liste.style.display = 'none'; tegnModel();
+}
+// Variantens eget navn uden mærke og model foran, fx "e-208 GT 51 kWh" → "GT 51 kWh"
+const kortNavn = (m, v) => { let n = v.n; for (const p of [m.mk+' ', m.m+' ']) if (n.toLowerCase().startsWith(p.toLowerCase())) n = n.slice(p.length); return n || v.n; };
+const aarTekst = y => y.length > 1 ? `${y[0]}–${y[y.length-1]}` : `${y[0]}`;
+const naturlig = new Intl.Collator('da', {numeric: true, sensitivity: 'base'});
+soeg.addEventListener('input', () => {
+  const ord = soeg.value.toLowerCase().split(/\s+/).filter(Boolean);
+  if (!ord.length){ liste.style.display = 'none'; return; }
+  hits = D.map((m,i)=>({m,i})).filter(({m}) => { const t = (m.mk+' '+m.m+' '+m.v.map(v=>v.n).join(' ')).toLowerCase(); return ord.every(o => t.includes(o)); })
+    // Mærke for mærke og modellerne i nummerrækkefølge (208, 308, 2008, 3008 …)
+    .sort((x, y) => naturlig.compare(x.m.mk + ' ' + x.m.m, y.m.mk + ' ' + y.m.m)).slice(0, 40);
+  valgt = -1;
+  liste.innerHTML = hits.length ? hits.map(({m,i}) => {
+    const a = aarListe(m);
+    // Varianter der matcher søgningen først; højst 6 pr. model, nyeste først
+    const vs = m.v.map((v,vi)=>({v,vi})).sort((x,y)=>Math.max(...y.v.y)-Math.max(...x.v.y));
+    const ram = vs.filter(o => ord.some(w => o.v.n.toLowerCase().includes(w) && !(m.mk+' '+m.m).toLowerCase().includes(w)));
+    const vis = (ram.length ? ram : vs).slice(0, 6), rest = m.v.length - vis.length;
+    return `<button role="option" class="model" data-i="${i}">${esc(m.mk+' '+m.m)}<small>${a[a.length-1]}–${a[0]} · ${m.v.length} ${m.v.length === 1 ? 'variant' : 'varianter'}</small></button>`
+      + vis.map(o => `<button role="option" class="variant" data-i="${i}" data-v="${o.vi}">${esc(kortNavn(m,o.v))}<small>${aarTekst(o.v.y)} · ${fmt(o.v.b,o.v.b%1?1:0)} kWh · WLTP ${o.v.r} km</small></button>`).join('')
+      + (rest > 0 ? `<span class="mere">+ ${rest} flere – vælg modellen for at se alle</span>` : '');
+  }).join('') : '<div class="ingen" style="padding:10px 14px">Ingen elbil fundet</div>';
+  liste.style.display = 'block';
+  tilpasListe();
+});
+// iPhone: tastaturet dækker bunden af skærmen uden at vinduet bliver mindre, så listen skal stoppe over tastaturet
+// – ellers ligger de nederste modeller gemt bag det og kan ikke nås
+function tilpasListe(){
+  if (liste.style.display !== 'block') return;
+  const vv = window.visualViewport, bund = vv ? vv.offsetTop + vv.height : innerHeight;
+  liste.style.maxHeight = Math.max(160, bund - liste.getBoundingClientRect().top - 10) + 'px';
+}
+if (window.visualViewport){ visualViewport.addEventListener('resize', tilpasListe); visualViewport.addEventListener('scroll', tilpasListe); }
+addEventListener('resize', tilpasListe);
+soeg.addEventListener('keydown', e => {
+  const knapper = [...liste.querySelectorAll('button')];
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); valgt = (valgt + (e.key==='ArrowDown'?1:-1) + knapper.length) % knapper.length; knapper.forEach((b,k)=>b.classList.toggle('aktiv',k===valgt)); }
+  if (e.key === 'Enter' && knapper.length){ e.preventDefault(); const b = knapper[Math.max(0,valgt)]; vaelgModel(+b.dataset.i, b.dataset.v === undefined ? undefined : +b.dataset.v); }
+  if (e.key === 'Escape') liste.style.display = 'none';
+});
+liste.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) vaelgModel(+b.dataset.i, b.dataset.v === undefined ? undefined : +b.dataset.v); });
+document.addEventListener('click', e => { if (!e.target.closest('.soeg')) liste.style.display = 'none'; });
+
+// Gem og del
+const noegle = m => m.url.replace(/^.*models\//,'').replace(/\/$/,'');
+// Linket bærer kun bilen (fx #kia-ev3) – claude.ai sender kun et simpelt #-mærke videre til siden
+const tok = m => noegle(m).replace('/', '-');
+const DELELINK = "https://creativecutsmedia.github.io/elbil-raekkevidde/it/";
+function tilHash(){ const m = model(); return new URLSearchParams({bil: noegle(m), v: m.v[S.v].n, aar: S.y, by: S.a, mv: S.b, t: S.t, last: S.l, ac: S.ac, soh: S.soh}).toString(); }
+function fraHash(h){
+  const q = new URLSearchParams(h.replace(/^#/,''));
+  const i = D.findIndex(m => noegle(m) === q.get('bil'));
+  if (i < 0) return false;
+  S.m = i; S.y = +q.get('aar') || 0;
+  const vi = D[i].v.findIndex(v => v.n === q.get('v') && (!S.y || v.y.includes(S.y)));
+  S.v = vi < 0 ? 0 : vi;
+  const tal = (k, min, max, std) => { const x = parseInt(q.get(k)); return isNaN(x) ? std : Math.min(max, Math.max(min, x)); };
+  S.a = tal('by',0,100,33); S.b = Math.max(S.a, tal('mv',0,100,57)); S.t = tal('t',-20,30,20); S.l = tal('last',0,1,0); S.ac = tal('ac',0,1,0); S.soh = tal('soh',60,100,100);
+  return true;
+}
+function vis(t){ const b = $('besked'); b.textContent = t; b.style.display = 'block'; clearTimeout(vis.t); vis.t = setTimeout(()=>b.style.display='none', 2600); }
+$('gem').addEventListener('click', () => { try { localStorage.setItem('elbil-raekkevidde-am', tilHash()); vis('Dine valg er husket på denne enhed'); } catch(e){ vis('Denne browser kan ikke huske valg – prøv uden privat browsing'); } });
+$('del').addEventListener('click', async () => {
+  const link = (DELELINK || location.href.split('#')[0]) + '#' + tok(model());
+  try { await navigator.clipboard.writeText(link); vis('Link til ' + model().mk + ' ' + model().m + ' kopieret'); }
+  catch(e){ const b = $('besked'); b.textContent = link; b.style.display = 'block'; b.style.userSelect = 'all'; clearTimeout(vis.t); vis.t = setTimeout(()=>b.style.display='none', 12000); }
+});
+
+let gemt = null; try { gemt = localStorage.getItem('elbil-raekkevidde-am'); } catch(e){}
+const fraMaerke = h => { const i = D.findIndex(m => tok(m) === h.replace(/^#/,'')); if (i < 0) return false; S.m = i; S.y = 0; S.v = 0; return true; };
+if (!fraMaerke(location.hash) && !fraHash(location.hash) && !(gemt && fraHash(gemt))){
+  const i = D.findIndex(m => noegle(m) === 'mazda/6e'); S.m = i < 0 ? 0 : i; S.y = 2025;
+}
+tegnModel();
+</script>
+
+
+<!-- Prøvelink (Maliks ønske 17/11): appen virker i 5 minutter fra første åbning på enheden, derefter danser Erik. -->
+<style>
+#dans{position:fixed;inset:0;z-index:100;display:none;place-items:center;overflow:hidden;
+  background:radial-gradient(circle at 50% 40%,#2a1d5c,#0b0820 70%);font-family:Montserrat,Lato,system-ui,sans-serif;color:#fff;text-align:center}
+#dans.vis{display:grid}
+#dans .lys{position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(40px);opacity:.45;mix-blend-mode:screen;animation:lys 3s ease-in-out infinite alternate}
+#dans .l1{background:#ff3fa4;left:-15vmax;top:-10vmax}
+#dans .l2{background:#3fd0ff;right:-15vmax;top:-5vmax;animation-delay:-1s}
+#dans .l3{background:#ffd23f;left:20vw;bottom:-25vmax;animation-delay:-2s}
+@keyframes lys{to{transform:translate(8vmax,6vmax) scale(1.2);opacity:.7}}
+#dans .kugle{position:absolute;top:-30px;left:50%;width:70px;height:70px;margin-left:-35px;border-radius:50%;
+  background:repeating-conic-gradient(#ddd 0 10deg,#888 10deg 20deg);box-shadow:0 0 40px #fff8;animation:kugle 2s linear infinite}
+@keyframes kugle{to{transform:rotate(360deg)}}
+#dans .indhold{position:relative;padding:24px max(16px,env(safe-area-inset-left,0px));max-width:560px}
+#dans h2{display:block;font-size:clamp(26px,6vw,44px);margin:0 0 6px;letter-spacing:.01em;text-transform:none}
+#dans p{font-size:clamp(15px,3.6vw,19px);margin:0 auto;max-width:440px;opacity:.9;line-height:1.5}
+#dans svg{width:min(78vw,340px);height:auto;display:block;margin:6px auto 4px;overflow:visible}
+/* Erik danser: krop gynger, arme svinger, ben sparker skiftevis, stokken drejer */
+.erik{animation:gyng .5s ease-in-out infinite alternate;transform-origin:150px 330px}
+@keyframes gyng{from{transform:rotate(-6deg) translateY(0)}to{transform:rotate(6deg) translateY(-10px)}}
+.arm-v{transform-origin:122px 168px;animation:armv .5s ease-in-out infinite alternate}
+.arm-h{transform-origin:178px 168px;animation:armh .5s ease-in-out infinite alternate}
+@keyframes armv{from{transform:rotate(40deg)}to{transform:rotate(-70deg)}}
+@keyframes armh{from{transform:rotate(-80deg)}to{transform:rotate(30deg)}}
+.ben-v{transform-origin:136px 262px;animation:benv .5s ease-in-out infinite alternate}
+.ben-h{transform-origin:164px 262px;animation:benh .5s ease-in-out infinite alternate}
+@keyframes benv{from{transform:rotate(25deg)}to{transform:rotate(-8deg)}}
+@keyframes benh{from{transform:rotate(8deg)}to{transform:rotate(-35deg)}}
+.hoved{transform-origin:150px 140px;animation:hoved .25s ease-in-out infinite alternate}
+@keyframes hoved{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+.stok{transform-origin:62px 230px;animation:stok 1s linear infinite}
+@keyframes stok{to{transform:rotate(360deg)}}
+.note{animation:note 2s ease-in infinite;opacity:0}
+.note.n2{animation-delay:.7s}.note.n3{animation-delay:1.4s}
+@keyframes note{0%{opacity:0;transform:translate(0,0)}20%{opacity:1}100%{opacity:0;transform:translate(30px,-90px) rotate(20deg)}}
+@media (prefers-reduced-motion:reduce){#dans *{animation-duration:2s!important}}
+</style>
+<div id="dans" role="dialog" aria-modal="true" aria-label="Prøvetiden er slut">
+  <div class="lys l1"></div><div class="lys l2"></div><div class="lys l3"></div>
+  <div class="kugle"></div>
+  <div class="indhold">
+    <h2>Prøvetiden er slut!</h2>
+    <svg viewBox="0 0 300 360" aria-hidden="true">
+      <g class="note"><text x="215" y="120" font-size="34" fill="#ffd23f">♪</text></g>
+      <g class="note n2"><text x="60" y="110" font-size="30" fill="#ff3fa4">♫</text></g>
+      <g class="note n3"><text x="230" y="70" font-size="26" fill="#3fd0ff">♪</text></g>
+      <g class="erik">
+        <!-- ben med brune bukser og sko -->
+        <g class="ben-v"><path d="M136 262 L126 322" stroke="#6b4a2b" stroke-width="20" stroke-linecap="round"/><ellipse cx="120" cy="328" rx="18" ry="8" fill="#2a1a10"/></g>
+        <g class="ben-h"><path d="M164 262 L176 322" stroke="#6b4a2b" stroke-width="20" stroke-linecap="round"/><ellipse cx="182" cy="328" rx="18" ry="8" fill="#2a1a10"/></g>
+        <!-- krop: grøn cardigan med knapper -->
+        <path d="M118 165 Q150 150 182 165 L188 265 Q150 278 112 265 Z" fill="#4f7a4a"/>
+        <path d="M150 160 L150 270" stroke="#3b5e37" stroke-width="3"/>
+        <circle cx="157" cy="190" r="3" fill="#e9d9a8"/><circle cx="157" cy="212" r="3" fill="#e9d9a8"/><circle cx="157" cy="234" r="3" fill="#e9d9a8"/>
+        <!-- arme; venstre holder stokken -->
+        <g class="arm-v"><path d="M122 168 L86 222" stroke="#4f7a4a" stroke-width="16" stroke-linecap="round"/><circle cx="84" cy="226" r="9" fill="#f1c9a5"/>
+          <g class="stok"><path d="M62 230 L106 222" stroke="#8a5a2b" stroke-width="6" stroke-linecap="round"/><path d="M106 222 q10 -2 10 -12" stroke="#8a5a2b" stroke-width="6" fill="none" stroke-linecap="round"/></g></g>
+        <g class="arm-h"><path d="M178 168 L214 222" stroke="#4f7a4a" stroke-width="16" stroke-linecap="round"/><circle cx="216" cy="226" r="9" fill="#f1c9a5"/></g>
+        <!-- hoved: skaldet, hvide tjavser, briller, stort hvidt skæg -->
+        <g class="hoved">
+          <circle cx="150" cy="118" r="34" fill="#f1c9a5"/>
+          <path d="M116 112 q-6 -14 6 -20 M184 112 q6 -14 -6 -20" stroke="#eee" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <circle cx="138" cy="114" r="9" fill="none" stroke="#333" stroke-width="3"/><circle cx="162" cy="114" r="9" fill="none" stroke="#333" stroke-width="3"/>
+          <path d="M147 114 h6" stroke="#333" stroke-width="3"/>
+          <circle cx="138" cy="114" r="2.5" fill="#333"/><circle cx="162" cy="114" r="2.5" fill="#333"/>
+          <path d="M120 128 Q150 190 180 128 Q165 140 150 136 Q135 140 120 128Z" fill="#f4f4f4"/>
+          <path d="M140 140 q10 8 20 0" stroke="#c0392b" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <ellipse cx="150" cy="124" rx="5" ry="4" fill="#e3a98a"/>
+        </g>
+      </g>
+    </svg>
+    <p>Erik på 87 fejrer, at dine 5 minutter er gået.<br>Vil du regne videre, så spørg ham, der sendte dig linket.</p>
+  </div>
+</div>
+<script>
+(() => {
+  const MIN = 5, NOEGLE = 'elbil-it-start';
+  let start = Date.now();
+  try { const g = +localStorage.getItem(NOEGLE); if (g) start = g; else localStorage.setItem(NOEGLE, String(start)); } catch(e){}
+  const slut = start + MIN * 60 * 1000;
+  const vis = () => { document.getElementById('dans').classList.add('vis'); document.body.style.overflow = 'hidden'; };
+  if (Date.now() >= slut) vis(); else setTimeout(vis, slut - Date.now());
+})();
+</script>
+
+</body>
+</html>
