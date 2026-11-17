@@ -94,6 +94,7 @@ h2{font-family:Jost,sans-serif;font-weight:400;letter-spacing:.16em;text-transfo
 .procenter div{text-align:center}.procenter div:first-child{text-align:left}.procenter div:last-child{text-align:right}
 .procenter b{display:block;font-family:Jost,sans-serif;font-weight:500;color:var(--bronze);letter-spacing:.08em;font-size:14px}
 .temp{position:relative;padding-top:30px}
+.soh input{background:linear-gradient(90deg,#e8913a,#e9c54a 45%,#6fe0c0)!important}
 .temp input{width:100%;appearance:none;height:3px;background:linear-gradient(90deg,#3d7bd9,#4fa6e0 40%,#9bd17a 62%,#e9c54a 80%,#e8913a);margin:0;outline:none}
 .temp input::-webkit-slider-thumb{appearance:none;width:30px;height:30px;border-radius:50%;background:var(--haandtag);cursor:pointer;border:0}
 .temp input::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--haandtag);cursor:pointer;border:0}
@@ -213,9 +214,18 @@ h1{text-shadow:0 0 40px rgba(139,120,255,.35)}
         <h2>Årgang</h2>
         <div class="chips" id="aargange"></div>
       </div>
-      <div class="blok" style="margin-bottom:0">
+      <div class="blok">
         <h2>Tilgængelige varianter</h2>
         <div id="varianter"></div>
+      </div>
+      <div class="blok" style="margin-bottom:0">
+        <h2>Batteriets tilstand <button class="info" data-for="f-soh" aria-label="Forklaring">i</button></h2>
+        <p class="forklar" id="f-soh">Et elbilbatteri mister lidt kapacitet med alder og opladninger, typisk 1–2 % om året. Batteriets tilstand (på engelsk State of Health, SoH) kan måles på værkstedet eller ses i nogle bilers app. 100 % er som ny. Rækkevidden falder i samme forhold, fordi bilen bruger lige så meget strøm pr. km, men har mindre at køre på.</p>
+        <div class="temp soh">
+          <span class="vaerdi" id="soh-vaerdi"></span>
+          <input type="range" id="soh" min="60" max="100" step="1" aria-label="Batteriets tilstand i procent">
+          <div class="ender"><span>60 %</span><span>100 % (som ny)</span></div>
+        </div>
       </div>
       <div class="bilfelt">
        <figure class="foto">
@@ -314,7 +324,7 @@ function interp(tab, x){
   return tab[tab.length-1][1];
 }
 
-const S = {m:0, y:0, v:0, a:33, b:57, t:20, l:0, ac:0};
+const S = {m:0, y:0, v:0, a:33, b:57, t:20, l:0, ac:0, soh:100};
 
 function beregn(v){
   const c0 = v.b / v.r;                            // kWh pr. km ved WLTP
@@ -327,7 +337,8 @@ function beregn(v){
     const timerPrKm = p[0]/FART[0] + p[1]/FART[1] + p[2]/FART[2];
     u += interp(KLIMA_KW, S.t) * timerPrKm / c0;
   }
-  return {km: Math.round(v.r / u), forbrug: 100 * c0 * u};
+  // Batteriets tilstand: mindre brugbar kapacitet, samme forbrug pr. km
+  return {km: Math.round(v.r * S.soh / 100 / u), forbrug: 100 * c0 * u};
 }
 
 const $ = id => document.getElementById(id);
@@ -356,13 +367,16 @@ function opdater(){
   const pct = Math.round((r.km / v.r - 1) * 100);
   $('forskel').textContent = pct === 0 ? 'Svarer til WLTP' : `${pct > 0 ? '+' : '−'}${Math.abs(pct)} % i forhold til WLTP`;
   $('resultat').style.setProperty('--andel', Math.min(100, r.km / v.r * 100) + '%');
-  $('forbrug').textContent = `Officiel WLTP-rækkevidde for ${v.n}: ${v.r} km med ${fmt(v.b,v.b%1?1:0)} kWh brugbart batteri. Estimeret forbrug under dine forhold: ${fmt(r.forbrug)} kWh/100 km.`;
+  $('forbrug').textContent = `Officiel WLTP-rækkevidde for ${v.n}: ${v.r} km med ${fmt(v.b,v.b%1?1:0)} kWh brugbart batteri. Estimeret forbrug under dine forhold: ${fmt(r.forbrug)} kWh/100 km.` + (S.soh < 100 ? ` Med batteriet på ${S.soh} % er der ca. ${fmt(v.b*S.soh/100)} kWh at køre på.` : '');
   const p = [S.a, S.b-S.a, 100-S.b];
   $('s-by').style.width = p[0]+'%'; $('s-land').style.width = p[1]+'%'; $('s-motor').style.width = p[2]+'%';
   $('h1').style.left = S.a+'%'; $('h2').style.left = S.b+'%';
   $('h1').setAttribute('aria-valuenow', S.a); $('h2').setAttribute('aria-valuenow', S.b);
   $('p-by').textContent = p[0]+'%'; $('p-land').textContent = p[1]+'%'; $('p-motor').textContent = p[2]+'%';
   $('temp').value = S.t;
+  $('soh').value = S.soh;
+  $('soh-vaerdi').textContent = S.soh + ' %';
+  $('soh-vaerdi').style.left = `calc(${(S.soh-60)/40*100}% + ${15 - (S.soh-60)/40*30}px)`;
   $('t-vaerdi').textContent = S.t + ' °C';
   $('t-vaerdi').style.left = `calc(${(S.t+20)/50*100}% + ${15 - (S.t+20)/50*30}px)`;
   document.querySelectorAll('input[name=last]').forEach(x => x.checked = +x.value === S.l);
@@ -541,6 +555,7 @@ $('h2').addEventListener('pointerdown', traek('b'));
   opdater();
 }));
 
+$('soh').addEventListener('input', e => { S.soh = +e.target.value; opdater(); });
 $('temp').addEventListener('input', e => { S.t = +e.target.value; opdater(); });
 document.querySelectorAll('input[name=last]').forEach(x => x.addEventListener('change', () => { S.l = +x.value; opdater(); }));
 $('ac').addEventListener('change', e => { S.ac = e.target.checked ? 1 : 0; opdater(); });
@@ -594,7 +609,7 @@ const noegle = m => m.url.replace(/^.*models\//,'').replace(/\/$/,'');
 // Linket bærer kun bilen (fx #kia-ev3) – claude.ai sender kun et simpelt #-mærke videre til siden
 const tok = m => noegle(m).replace('/', '-');
 const DELELINK = "https://creativecutsmedia.github.io/elbil-raekkevidde/";
-function tilHash(){ const m = model(); return new URLSearchParams({bil: noegle(m), v: m.v[S.v].n, aar: S.y, by: S.a, mv: S.b, t: S.t, last: S.l, ac: S.ac}).toString(); }
+function tilHash(){ const m = model(); return new URLSearchParams({bil: noegle(m), v: m.v[S.v].n, aar: S.y, by: S.a, mv: S.b, t: S.t, last: S.l, ac: S.ac, soh: S.soh}).toString(); }
 function fraHash(h){
   const q = new URLSearchParams(h.replace(/^#/,''));
   const i = D.findIndex(m => noegle(m) === q.get('bil'));
@@ -603,7 +618,7 @@ function fraHash(h){
   const vi = D[i].v.findIndex(v => v.n === q.get('v') && (!S.y || v.y.includes(S.y)));
   S.v = vi < 0 ? 0 : vi;
   const tal = (k, min, max, std) => { const x = parseInt(q.get(k)); return isNaN(x) ? std : Math.min(max, Math.max(min, x)); };
-  S.a = tal('by',0,100,33); S.b = Math.max(S.a, tal('mv',0,100,57)); S.t = tal('t',-20,30,20); S.l = tal('last',0,1,0); S.ac = tal('ac',0,1,0);
+  S.a = tal('by',0,100,33); S.b = Math.max(S.a, tal('mv',0,100,57)); S.t = tal('t',-20,30,20); S.l = tal('last',0,1,0); S.ac = tal('ac',0,1,0); S.soh = tal('soh',60,100,100);
   return true;
 }
 function vis(t){ const b = $('besked'); b.textContent = t; b.style.display = 'block'; clearTimeout(vis.t); vis.t = setTimeout(()=>b.style.display='none', 2600); }
