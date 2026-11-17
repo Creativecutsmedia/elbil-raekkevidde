@@ -901,10 +901,35 @@ tegnModel();
   </div>
 </div>
 <script>
-(() => {
-  const MIN = 5, NOEGLE = 'elbil-it-start';
+// Ejer-adgang (Maliks ønske 17/11): broren åbner én gang sit hemmelige link (#kode) og får derefter appen uden tidsgrænse
+// på den enhed, plus en knap der kopierer det almindelige link. Kun koden's SHA-256 står her, ikke koden selv.
+(async () => {
+  const MIN = 5, NOEGLE = 'elbil-it-start', EJER = 'elbil-ejer', HASH = '5f6a5a2c353925e2d482a28013fe7f7bbb133cde9b06bfdb873767051634ef28';
+  const gem = (k, v) => { try { localStorage.setItem(k, v); } catch(e){} };
+  const hent = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
+  const kode = location.hash.replace(/^#/, '');
+  if (kode && window.crypto && crypto.subtle){
+    try {
+      const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(kode));
+      const hx = [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+      if (hx === HASH){ gem(EJER, '1'); history.replaceState(null, '', location.pathname); }
+    } catch(e){}
+  }
+  if (hent(EJER) === '1'){
+    const link = location.origin + location.pathname;
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:90;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px));background:#202a45;color:#fff;font:500 13px Montserrat,system-ui,sans-serif;box-shadow:0 -6px 20px rgba(0,0,0,.35)';
+    bar.innerHTML = '<span>Ejer-adgang: ingen tidsgrænse på denne enhed</span><button type="button" style="font:600 13px Montserrat,system-ui,sans-serif;padding:9px 14px;border:0;border-radius:4px;background:#ffb307;color:#202a45;cursor:pointer">Kopiér link til at sende</button>';
+    bar.querySelector('button').addEventListener('click', async e => {
+      try { await navigator.clipboard.writeText(link); e.target.textContent = 'Kopieret ✓'; }
+      catch(err){ e.target.textContent = link; e.target.style.userSelect = 'all'; }
+      setTimeout(() => e.target.textContent = 'Kopiér link til at sende', 2500);
+    });
+    document.body.appendChild(bar); document.body.style.paddingBottom = '64px';
+    return;
+  }
   let start = Date.now();
-  try { const g = +localStorage.getItem(NOEGLE); if (g) start = g; else localStorage.setItem(NOEGLE, String(start)); } catch(e){}
+  const g = +hent(NOEGLE); if (g) start = g; else gem(NOEGLE, String(start));
   const slut = start + MIN * 60 * 1000;
   const vis = () => { document.getElementById('dans').classList.add('vis'); document.body.style.overflow = 'hidden'; };
   if (Date.now() >= slut) vis(); else setTimeout(vis, slut - Date.now());
