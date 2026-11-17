@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>A&amp;M elbil rækkevidde</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Lato:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#ffffff; --tekst:#1b1f27; --daempet:#5a6170; --linje:#d5d9de; --felt:#eceef1;
@@ -181,6 +181,69 @@ h1{text-shadow:0 0 40px rgba(139,120,255,.35)}
 
 .logo-am{text-transform:none;letter-spacing:.01em;font-family:Lato,system-ui,sans-serif;font-size:24px;color:#c9c6e6;border-bottom:0;padding-bottom:0}
 @media (max-width:600px){.logo-am{font-size:20px}}
+/* A&M-appens udseende, aflæst på am.dk 17/11 (brorens ønske): koksgrå flader, gul accent (#ffb307),
+   hvide felter med mørkeblå tekst (#202a45), Montserrat. Lægges oven på glastemaet og slår det fra. */
+:root:not(.a):not(.b):not(.c){
+  --bg:#3a3a3a; --tekst:#ffffff; --daempet:#c9ccd1; --linje:rgba(255,255,255,.16); --felt:#ffffff;
+  --navy:#202a45; --navy-tekst:#ffffff; --bronze:#ffb307; --haandtag:#ffb307; --fokus:#ffb307;
+  --gul:#ffb307; --panel:#4a4a4a; --felt-tekst:#202a45; --graa-tekst:#868e96;
+  color-scheme:dark;
+}
+body{background:var(--bg);font-family:Montserrat,system-ui,sans-serif}
+.top{background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none;border-bottom:0}
+.logo,.logo-am{font-family:Montserrat,system-ui,sans-serif;font-weight:500;font-size:30px;color:#fff;letter-spacing:.01em;border-bottom:0}
+@media (max-width:600px){.logo-am{font-size:22px}}
+.soeg input{background:#fff;color:var(--felt-tekst);border:0;border-radius:4px;font-family:Montserrat,sans-serif;font-weight:500}
+.soeg input::placeholder{color:var(--graa-tekst)}
+.soeg svg{color:var(--felt-tekst);opacity:1}
+.forslag{background:#fff;color:var(--felt-tekst);border:0;border-radius:6px;box-shadow:0 12px 30px rgba(0,0,0,.35);backdrop-filter:none;-webkit-backdrop-filter:none}
+.forslag button{color:var(--felt-tekst);border-bottom-color:#e6e8eb}
+.forslag button:hover,.forslag button.aktiv{background:#fff4d6}
+.forslag small,.forslag .mere{color:var(--graa-tekst)}
+.forslag .mere{border-bottom-color:#e6e8eb}
+.knap{border:1px solid #fff;border-radius:4px;background:transparent;font-family:Montserrat,sans-serif;font-weight:600;letter-spacing:.04em;text-transform:none;font-size:14px}
+.knap:hover{background:rgba(255,255,255,.1)}
+
+h1{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-spacing:0;text-shadow:none;font-size:clamp(26px,3.6vw,40px)}
+h2{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-spacing:0;font-size:18px}
+.lille,.chip,.procenter b,.temp .vaerdi,.temp .ender,.resultat .lille{font-family:Montserrat,sans-serif;letter-spacing:.02em}
+.lille{text-transform:none;font-size:13px;font-weight:500}
+.intro{color:#fff}.forbrug{color:var(--daempet)}
+
+/* Kolonnerne som am.dk's grå paneler */
+.gitter>section{background:var(--panel);border:0;border-radius:8px;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+
+.chip{background:#fff;color:var(--felt-tekst);border:0;border-radius:4px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--gul);color:var(--felt-tekst);box-shadow:none}
+.radio input{border:2px solid #fff;background:transparent}
+.radio input::after{background:var(--gul);box-shadow:none}
+.info{border-color:#fff}
+.forklar{background:rgba(0,0,0,.18);border:0;border-radius:6px;color:#e6e8eb}
+
+.blanding{background:#fff;border:0;border-radius:4px}
+.seg{color:var(--felt-tekst);border-right-color:#e6e8eb}
+.seg:first-child{border-radius:4px 0 0 4px}.seg:last-child{border-radius:0 4px 4px 0}
+.haandtag{background:#fff;color:var(--felt-tekst);border:3px solid var(--gul);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.procenter b{color:var(--gul)}
+.temp input::-webkit-slider-thumb{background:#fff;border:3px solid var(--gul);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.temp input::-moz-range-thumb{background:#fff;border:3px solid var(--gul);box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.soh input{background:var(--gul)!important}
+.skift span.spor{border-color:#fff}
+.skift input:checked+span.spor{background:var(--gul);border-color:var(--gul)}
+.skift input:checked+span.spor::after{background:#fff;box-shadow:none}
+
+/* Bil og resultat som am.dk's hvide kort */
+.foto{border-radius:8px;background:#fff;box-shadow:none}
+.foto figcaption{font-family:Montserrat,sans-serif;letter-spacing:.04em}
+.resultat{background:#fff;color:var(--felt-tekst);border:0;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.35);backdrop-filter:none;-webkit-backdrop-filter:none}
+.resultat::before{background:var(--gul);border-radius:8px 0 0 0;height:4px}
+.km{font-family:Montserrat,sans-serif;font-weight:700;text-shadow:none;color:var(--felt-tekst)}
+.forskel{color:var(--graa-tekst);opacity:1}
+
+.ansvar{border-top-color:var(--linje);color:var(--daempet)}
+.ansvar h3{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-spacing:0;color:#fff}
+.besked{background:var(--navy);border:0;border-radius:4px;backdrop-filter:none}
+
 </style>
 </head>
 <body>
