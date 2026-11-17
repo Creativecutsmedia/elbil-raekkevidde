@@ -114,6 +114,29 @@ h2{font-family:Jost,sans-serif;font-weight:400;letter-spacing:.16em;text-transfo
 .ansvar a{color:inherit}
 .besked{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;font-size:14px;display:none;z-index:30}
 .ingen{color:var(--daempet);font-size:14px}
+.knap-print{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:18px;padding:13px 16px;border:1.5px solid currentColor;border-radius:999px;background:transparent;color:inherit;font:600 14px/1.2 Lato,system-ui,sans-serif;letter-spacing:.04em;cursor:pointer}
+.knap-print:hover{background:var(--felt)}
+#udskrift{display:none}
+/* Udskrift/PDF: kun et rent resumé-ark, sort på hvidt */
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff!important;color:#111!important}
+  body>*:not(#udskrift){display:none!important}
+  #udskrift{display:block!important;font-family:Lato,Helvetica,Arial,sans-serif;color:#111}
+  #udskrift h1{font:700 22px/1.2 Helvetica,Arial,sans-serif;margin:0 0 2px;text-transform:none;letter-spacing:0;text-shadow:none;color:#111}
+  #udskrift .dato{color:#555;font-size:12px;margin:0 0 14px}
+  #udskrift .bil{display:flex;gap:18px;align-items:center;margin:0 0 14px}
+  #udskrift .bil img{width:62mm;height:40mm;object-fit:cover;border-radius:3mm;border:1px solid #ddd}
+  #udskrift .navn{font-size:18px;font-weight:700}
+  #udskrift .variant{color:#333;font-size:13px;margin-top:2px}
+  #udskrift .km{font:700 54px/1 Helvetica,Arial,sans-serif;color:#111;margin-top:8px}
+  #udskrift .km span{font-size:18px;margin-left:4px}
+  #udskrift .km small{display:block;font-size:12px;font-weight:400;color:#555;margin-top:4px}
+  #udskrift table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 12px}
+  #udskrift th,#udskrift td{text-align:left;padding:7px 8px;border-bottom:1px solid #ddd;vertical-align:top}
+  #udskrift th{width:42%;color:#444;font-weight:600}
+  #udskrift .note{font-size:10.5px;color:#555;line-height:1.5;margin:4px 0 0}
+}
 .drej{white-space:nowrap}
 @media (max-width:600px){
   .top .ramme{gap:10px}
@@ -295,6 +318,9 @@ h2{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-
 @media (max-width:400px){.logo-am::before{font-size:32px}.knap{padding:8px 10px;font-size:12px}}
 .gitter>section .resultat .lille{color:#ffffff;opacity:.9}
 
+.gitter>section .knap-print{color:#202a45;border-color:#202a45;font-family:Montserrat,sans-serif}
+.gitter>section .knap-print:hover{background:var(--gul);border-color:var(--gul)}
+
 </style>
 </head>
 <body>
@@ -364,6 +390,7 @@ h2{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-
           <div class="lille">Estimeret rækkevidde baseret på fuldt opladet batteri</div>
           <div><div class="km" aria-live="polite"><output id="km">0</output><span>KM</span></div><span class="forskel" id="forskel"></span></div>
         </div>
+        <button class="knap-print" id="print" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"/><rect x="6" y="14" width="12" height="7"/></svg>Udskriv / gem som PDF</button>
       </div>
     </section>
 
@@ -418,6 +445,7 @@ h2{font-family:Montserrat,sans-serif;font-weight:700;text-transform:none;letter-
   </div>
 </main>
 <div class="besked" id="besked" role="status"></div>
+<section id="udskrift" aria-hidden="true"></section>
 
 <script>
 const D = [{"mk":"Peugeot","m":"e-208","url":"https://evkx.net/models/peugeot/208/","v":[{"n":"Peugeot E-208 50 kWh","d":"FWD","b":46.3,"r":363.0,"kw":"100","y":[2024,2025],"u":false},{"n":"Peugeot E-208 54 kWh","d":"FWD","b":51.0,"r":433.0,"kw":"100","y":[2025,2026],"u":false},{"n":"Peugeot E-208 GTi","d":"FWD","b":51.0,"r":350.0,"kw":"100","y":[2026],"u":false},{"n":"Peugeot E-208 50 kWh (GEN1)","d":"FWD","b":46.3,"r":363.0,"kw":"100","y":[2020,2021,2022,2023],"u":true},{"n":"Peugeot E-208 51 kWh","d":"FWD","b":48.1,"r":400.0,"kw":"100","y":[2024,2025],"u":true},{"n":"Peugeot E-208 51 kWh (GEN1)","d":"FWD","b":48.1,"r":400.0,"kw":"100","y":[2023],"u":true}],"f":"foto/peugeot-208.jpg"},{"mk":"Peugeot","m":"e-308","url":"https://evkx.net/models/peugeot/308/","v":[{"n":"Peugeot E-308","d":"FWD","b":50.8,"r":410.0,"kw":"100","y":[2023,2024,2025],"u":true},{"n":"Peugeot E-308 SW","d":"FWD","b":50.8,"r":410.0,"kw":"100","y":[2024,2025,2026],"u":true}],"f":"foto/peugeot-308.jpg"},{"mk":"Peugeot","m":"e-2008","url":"https://evkx.net/models/peugeot/2008/","v":[{"n":"Peugeot E-2008","d":"FWD","b":50.8,"r":406.0,"kw":"100","y":[2023,2024],"u":false}],"f":"foto/peugeot-2008.jpg"},{"mk":"Peugeot","m":"e-3008","url":"https://evkx.net/models/peugeot/3008/","v":[{"n":"Peugeot E-3008","d":"FWD","b":73.0,"r":527.0,"kw":"160","y":[2025],"u":false},{"n":"Peugeot E-3008 Long Range","d":"FWD","b":98.0,"r":700.0,"kw":"160","y":[2024,2025],"u":false}],"f":"foto/peugeot-3008.jpg"},{"mk":"Peugeot","m":"e-5008","url":"https://evkx.net/models/peugeot/5008/","v":[{"n":"Peugeot E-5008","d":"FWD","b":73.0,"r":502.0,"kw":"160","y":[2025,2026],"u":false},{"n":"Peugeot E-5008 Long Range","d":"FWD","b":96.9,"r":668.0,"kw":"160","y":[2025,2026],"u":false}],"f":"foto/peugeot-5008.jpg"},{"mk":"Opel","m":"Astra Electric","url":"https://evkx.net/models/opel/astra/","v":[{"n":"Opel Astra Electric","d":"FWD","b":50.8,"r":413.0,"kw":"100","y":[2024,2025],"u":true},{"n":"Opel Astra Sports Tourer Electric","d":"FWD","b":50.8,"r":413.0,"kw":"100","y":[2026],"u":true}],"f":"foto/opel-astra.jpg"},{"mk":"Opel","m":"Corsa Electric","url":"https://evkx.net/models/opel/corsa/","v":[{"n":"Opel Corsa Electric 50 kWh","d":"FWD","b":46.0,"r":357.0,"kw":"100","y":[2024,2025,2026],"u":false},{"n":"Opel Corsa Electric 51 kWh Long Range","d":"FWD","b":48.1,"r":405.0,"kw":"100","y":[2024,2025],"u":false}],"f":"foto/opel-corsa.jpg"},{"mk":"Opel","m":"Frontera Electric","url":"https://evkx.net/models/opel/frontera/","v":[{"n":"Opel Frontera","d":"FWD","b":44.0,"r":306.0,"kw":"100","y":[2025,2026],"u":false}],"f":"foto/opel-frontera.jpg"},{"mk":"Opel","m":"Grandland Electric","url":"https://evkx.net/models/opel/grandland/","v":[{"n":"Opel Grandland","d":"FWD","b":73.0,"r":525.0,"kw":"160","y":[2025],"u":false},{"n":"Opel Grandland 97 kWh","d":"FWD","b":96.9,"r":694.0,"kw":"160","y":[2026],"u":false},{"n":"Opel Grandland AWD","d":"AWD","b":73.0,"r":501.0,"kw":"160","y":[2026],"u":false},{"n":"Opel Grandland 82 kWh","d":"FWD","b":82.2,"r":573.0,"kw":"160","y":[2026],"u":true}],"f":"foto/opel-grandland.jpg"},{"mk":"Opel","m":"Mokka Electric","url":"https://evkx.net/models/opel/mokka/","v":[{"n":"Opel Mokka Electric","d":"FWD","b":50.8,"r":406.0,"kw":"100","y":[2021,2022,2023,2024,2025,2026],"u":false},{"n":"Opel Mokka GSE","d":"FWD","b":51.0,"r":336.0,"kw":"100","y":[2026],"u":false}],"f":"foto/opel-mokka.jpg"},{"mk":"Leapmotor","m":"B10","url":"https://evkx.net/models/leapmotor/b10/","v":[{"n":"Leapmotor B10 56.2 kWh","d":"RWD","b":55.0,"r":361.0,"kw":"140","y":[2025,2026],"u":false},{"n":"Leapmotor B10 67.1 kWh","d":"RWD","b":65.0,"r":434.0,"kw":"168","y":[2025,2026],"u":false}],"f":"foto/leapmotor-b10.jpg"},{"mk":"Leapmotor","m":"C10","url":"https://evkx.net/models/leapmotor/c10/","v":[{"n":"Leapmotor C10 69kWh RWD","d":"RWD","b":67.0,"r":420.0,"kw":"80","y":[2024,2025,2026],"u":false},{"n":"Leapmotor C10 AWD 81.9 kWh","d":"AWD","b":81.9,"r":437.0,"kw":"180","y":[2026],"u":false},{"n":"Leapmotor C10 RWD 81.9 kWh","d":"RWD","b":81.9,"r":510.0,"kw":"180","y":[2026],"u":false}],"f":"foto/leapmotor-c10.jpg"},{"mk":"Leapmotor","m":"T03","url":"https://evkx.net/models/leapmotor/t03/","v":[{"n":"Leapmotor T03 37.3 kWh","d":"FWD","b":36.0,"r":265.0,"kw":"48","y":[2024,2025,2026],"u":false}],"f":"foto/leapmotor-t03.jpg"}];
@@ -472,6 +500,36 @@ function tegnModel(){
   $('varianter').innerHTML = vs.map(o => `<label class="radio"><input type="radio" name="variant" value="${o.i}" ${o.i===S.v?'checked':''}><span class="lille">${esc(kortNavn(m, o.v))} <small>(${o.v.d} · ${fmt(o.v.b,o.v.b%1?1:0)} kWh · WLTP ${o.v.r} km)</small></span></label>`).join('');
   opdater();
 }
+
+// Udskrift/PDF: bygger et resumé af de valgte indstillinger lige før printvinduet åbner
+function lavUdskrift(){
+  const m = model(), v = m.v[S.v], r = beregn(v);
+  const p = [S.a, S.b - S.a, 100 - S.b];
+  let foto = '';
+  try {
+    const c = $('spin');
+    if (document.querySelector('.foto').classList.contains('spin') && c.width) foto = c.toDataURL('image/jpeg', 0.85);
+    else if ($('foto').src) foto = $('foto').src;
+  } catch(e){ foto = ''; }
+  // Kan 360-billedet ikke kopieres (fx når filen åbnes lokalt), bruges modellens almindelige foto
+  if (!foto) foto = v.f || m.f || '';
+  const navn = esc(m.mk + ' ' + m.m), dato = new Date().toLocaleDateString('da-DK', {day:'numeric', month:'long', year:'numeric'});
+  const raekker = [
+    ['Variant', esc(kortNavn(m, v)) + ` (${v.d})`], ['Årgang', S.y],
+    ['Batteri', `${fmt(v.b, v.b%1?1:0)} kWh brugbart`], ['Officiel WLTP-rækkevidde', `${v.r} km`],
+    ['Kørselsmønster', `By ${p[0]} % · Landevej ${p[1]} % · Motorvej ${p[2]} %`], ['Udetemperatur', `${S.t} °C`],
+    ['Antal passagerer', S.l ? 'Fuldt lastet' : 'Kun føreren'], ['Aircondition', S.ac ? 'Til' : 'Fra'],
+    ['Batteriets tilstand', `${S.soh} %` + (S.soh < 100 ? ` (ca. ${fmt(v.b*S.soh/100)} kWh at køre på)` : ' (som ny)')],
+    ['Estimeret forbrug', `${fmt(r.forbrug)} kWh/100 km`]
+  ];
+  const ansvar = document.querySelector('.ansvar p b');
+  $('udskrift').innerHTML = `<h1>Estimeret rækkevidde</h1><p class="dato">${dato}</p>
+    <div class="bil">${foto ? `<img src="${foto}" alt="">` : ''}<div><div class="navn">${navn}</div><div class="variant">${esc(kortNavn(m, v))} · ${S.y}</div>
+    <div class="km">${r.km}<span>km</span><small>ved fuldt opladet batteri under de valgte forhold</small></div></div></div>
+    <table>${raekker.map(([k, x]) => `<tr><th>${k}</th><td>${x}</td></tr>`).join('')}</table>
+    <p class="note">${ansvar ? esc(ansvar.textContent) + ' ' : ''}Rækkevidden er et estimat og kan ikke garanteres. Den afhænger også af fart, dæk, vind, bakker, udstyr og batteriets alder. Kilde til bildata: producenternes WLTP-tal via evkx.net.</p>`;
+}
+addEventListener('beforeprint', lavUdskrift);
 
 function opdater(){
   const m = model(), v = m.v[S.v];
@@ -669,6 +727,10 @@ $('h2').addEventListener('pointerdown', traek('b'));
   opdater();
 }));
 
+$('print').addEventListener('click', () => {
+  lavUdskrift();
+  try { window.print(); } catch(e){ vis('Udskrift virker ikke i denne visning – åbn linket i Safari eller Chrome'); }
+});
 $('soh').addEventListener('input', e => { S.soh = +e.target.value; opdater(); });
 $('temp').addEventListener('input', e => { S.t = +e.target.value; opdater(); });
 document.querySelectorAll('input[name=last]').forEach(x => x.addEventListener('change', () => { S.l = +x.value; opdater(); }));
