@@ -898,15 +898,15 @@ tegnModel();
   }
   if (hent(EJER) === '1'){
     // Hver knap laver et nyt link med sin egen udløbstid regnet fra trykket (5 min eller 3 dage – Maliks ønsker 17/11)
-    const nytLink = min => location.origin + location.pathname + '?u=' + Math.floor(Date.now() / 1000 + min * 60).toString(36);
-    const KNAPPER = [['Kopiér 5-min link', 5, '5 min'], ['Kopiér 3-dages link', 3 * 24 * 60, '3 dage']];
+    const nytLink = (min, fraAabning) => location.origin + location.pathname + (fraAabning ? '?t=' + min : '?u=' + Math.floor(Date.now() / 1000 + min * 60).toString(36));
+    const KNAPPER = [['Kopiér 5-min link', 5, '5 min', false], ['Kopiér 3-dages link', 3 * 24 * 60, '3 dage fra modtageren åbner det', true]];
     const BAR_CSS = 'position:fixed;left:0;right:0;bottom:0;z-index:90;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px));background:#202a45;color:#fff;font:500 13px Montserrat,system-ui,sans-serif;box-shadow:0 -6px 20px rgba(0,0,0,.35)';
     const KNAP_CSS = 'font:600 13px Montserrat,system-ui,sans-serif;padding:9px 14px;border:0;border-radius:4px;background:#ffb307;color:#202a45;cursor:pointer';
     const bar = document.createElement('div');
     bar.style.cssText = BAR_CSS;
     bar.innerHTML = '<span>Ejer-adgang: ingen tidsgrænse på denne enhed.</span>' + KNAPPER.map((k, i) => `<button type="button" data-i="${i}" style="${KNAP_CSS}">${k[0]}</button>`).join('');
     bar.querySelectorAll('button').forEach(b => b.addEventListener('click', async e => {
-      const [tekst, min, varighed] = KNAPPER[+b.dataset.i], link = nytLink(min);
+      const [tekst, min, varighed, fraAabning] = KNAPPER[+b.dataset.i], link = nytLink(min, fraAabning);
       try { await navigator.clipboard.writeText(link); b.textContent = `Kopieret – virker i ${varighed} ✓`; }
       catch(err){ b.textContent = link; b.style.userSelect = 'all'; }
       setTimeout(() => b.textContent = tekst, 2500);
@@ -914,13 +914,15 @@ tegnModel();
     document.body.appendChild(bar); document.body.style.paddingBottom = '64px';
     return;
   }
-  const u = new URLSearchParams(location.search).get('u');
+  const q = new URLSearchParams(location.search), u = q.get('u'), tm = parseInt(q.get('t'));
   let slut;
-  if (u && /^[0-9a-z]+$/.test(u)) slut = parseInt(u, 36) * 1000;
+  if (u && /^[0-9a-z]+$/.test(u)) slut = parseInt(u, 36) * 1000;          // fast udløb (5-min links)
   else {
+    // Tid fra første åbning på enheden: standard 5 min, eller ?t=minutter (fx 4320 = 3 dage); egen tæller pr. varighed
+    const varighed = tm > 0 ? Math.min(tm, 60 * 24 * 30) : MIN, k = tm > 0 ? NOEGLE + '-' + varighed : NOEGLE;
     let start = Date.now();
-    const g = +hent(NOEGLE); if (g) start = g; else gem(NOEGLE, String(start));
-    slut = start + MIN * 60 * 1000;
+    const g = +hent(k); if (g) start = g; else gem(k, String(start));
+    slut = start + varighed * 60 * 1000;
   }
   const vis = () => {
     document.getElementById('taeller').hidden = true;
